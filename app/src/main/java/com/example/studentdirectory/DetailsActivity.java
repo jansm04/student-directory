@@ -95,12 +95,4 @@ public class DetailsActivity extends AppCompatActivity {
         callIntent.setData(Uri.parse("tel:" + phone));
         startActivity(callIntent);
     }
-
-    public void handleMapButton(View view) {
-        Intent currentIntent = getIntent();
-        Intent nextIntent = new Intent(this, MapActivity.class);
-        nextIntent.putExtra("latitude", currentIntent.getDoubleExtra("latitude", 0));
-        nextIntent.putExtra("longitude", currentIntent.getDoubleExtra("longitude", 0));
-        startActivity(nextIntent);
-    }
 }

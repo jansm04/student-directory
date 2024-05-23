@@ -1,24 +1,38 @@
 package com.example.studentdirectory;
 
+import android.Manifest;
 
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.location.FusedLocationProviderClient;
 
+import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
+import android.provider.Settings;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
 public class MapActivity extends AppCompatActivity implements OnMapReadyCallback {
 
+    private FusedLocationProviderClient fusedLocationProviderClient;
     private MapView mapView;
+    private GoogleMap map;
 
     private static final String MAPVIEW_BUNDLE_KEY = "MapViewBundleKey";
+    int PERMISSION_ID = 44;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,7 +46,67 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         mapView.onCreate(mapViewBundle);
 
         mapView.getMapAsync(this);
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
     }
+
+    @SuppressLint("MissingPermission")
+    private void getLastLocation() {
+        if (checkPermissions()) {
+            if (isLocationEnabled()) {
+                fusedLocationProviderClient.getLastLocation().addOnCompleteListener(task -> {
+                    Location location = task.getResult();
+                    if (location == null) {
+                        System.out.println("Error: null location.");
+                    } else {
+                        System.out.println("Location: " + location.getLatitude() + ", " + location.getLongitude());
+                        setMarker(location);
+                    }
+                });
+            } else {
+                Toast.makeText(this, "Please turn on" + " your location...", Toast.LENGTH_LONG).show();
+                Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                startActivity(intent);
+            }
+        } else {
+            requestPermissions();
+        }
+    }
+
+    private boolean checkPermissions() {
+        return ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
+    }
+
+    private void requestPermissions() {
+        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSION_ID);
+    }
+
+    private boolean isLocationEnabled() {
+        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        System.out.println("Reached here. Code - " + requestCode);
+        if (requestCode == 44) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                System.out.println("Permission granted.");
+                getLastLocation();
+            } else {
+                Toast.makeText(this, "Permission denied.", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    public void setMarker(Location location) {
+        double latitude = location.getLatitude();
+        double longitude = location.getLongitude();
+        LatLng coordinates = new LatLng(latitude, longitude);
+        map.addMarker(new MarkerOptions().position(coordinates).title("Marker"));
+        map.moveCamera(CameraUpdateFactory.newLatLng(coordinates));
+    }
+
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
@@ -66,13 +140,11 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     }
 
     @Override
-    public void onMapReady(GoogleMap map) {
-        Intent currentIntent = getIntent();
-        double latitude = currentIntent.getDoubleExtra("latitude", 0);
-        double longitude = currentIntent.getDoubleExtra("longitude", 0);
-        map.addMarker(new MarkerOptions().position(new LatLng(latitude, longitude)).title("Marker"));
-        map.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(latitude, longitude)));
+    public void onMapReady(@NonNull GoogleMap map) {
+        this.map = map;
+        getLastLocation();
     }
+
 
     @Override
     protected void onPause() {

@@ -8,6 +8,16 @@
     tools:context=".MainActivity">
     <!-- res/layout/main_activity.xml -->
 
+    <androidx.appcompat.widget.Toolbar
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/toolbar"
+        android:background="@color/purple_500"
+        app:title="@string/app_name"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        app:layout_constraintTop_toTopOf="parent"/>
+
     <TableLayout
         android:id="@+id/table"
         android:layout_width="345dp"
