@@ -19,10 +19,13 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 
 public class MapActivity extends AppCompatActivity implements OnMapReadyCallback {
@@ -42,11 +45,19 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         if (savedInstanceState != null) {
             mapViewBundle = savedInstanceState.getBundle(MAPVIEW_BUNDLE_KEY);
         }
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
         mapView = findViewById(R.id.mapView);
         mapView.onCreate(mapViewBundle);
 
         mapView.getMapAsync(this);
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.toolbar_secondary, menu);
+        return true;
     }
 
     @SuppressLint("MissingPermission")
@@ -162,6 +173,11 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     public void onLowMemory() {
         super.onLowMemory();
         mapView.onLowMemory();
+    }
+
+    public void handleHomeButton(MenuItem item) {
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
     }
 
 }
