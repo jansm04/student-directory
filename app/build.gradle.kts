@@ -3,11 +3,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.studentdirectory"
+    namespace = "com.jan.studentdirectory"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.example.studentdirectory"
+        applicationId = "com.jan.studentdirectory"
         minSdk = 24
         targetSdk = 34
         versionCode = 1

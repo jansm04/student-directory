@@ -1,4 +1,4 @@
-package com.example.studentdirectory;
+package com.jan.studentdirectory;
 
 public class ApiClient {
     private static final String BASE_URL = "https://static0app.z13.web.core.windows.net/";

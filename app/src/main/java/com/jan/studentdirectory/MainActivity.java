@@ -1,4 +1,4 @@
-package com.example.studentdirectory;
+package com.jan.studentdirectory;
 
 import android.content.Intent;
 import android.os.Bundle;

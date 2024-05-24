@@ -1,4 +1,4 @@
-package com.example.studentdirectory;
+package com.jan.studentdirectory;
 
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;

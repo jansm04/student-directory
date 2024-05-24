@@ -1,4 +1,4 @@
-package com.example.studentdirectory;
+package com.jan.studentdirectory;
 
 import java.util.List;
 
