@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
     List<Student> students = new ArrayList<>();
 
     private void populateStudents() {
-        ApiService apiService = ApiClient.getApiService();
+        ApiService apiService = ApiClient.createService(Properties.USERNAME, Properties.PASSWORD);
         Call<List<Student>> call = apiService.getStudents();
 
         call.enqueue(new Callback<List<Student>>() {
@@ -123,6 +123,28 @@ public class MainActivity extends AppCompatActivity {
 
     public void handleMapButton(MenuItem item) {
         Intent intent = new Intent(this, MapActivity.class);
+        int n = students.size();
+        String[] names = new String[n];
+        int[] ids = new int[n];
+        String[] addresses = new String[n];
+        double[] latitudes = new double[n];
+        double[] longitudes = new double[n];
+        String[] phones = new String[n];
+        for (int i = 0; i < n; i++) {
+            Student student = students.get(i);
+            names[i] = student.getName();
+            ids[i] = student.getStudentId();
+            addresses[i] = student.getAddress();
+            latitudes[i] = student.getLatitude();
+            longitudes[i] = student.getLongitude();
+            phones[i] = student.getPhone();
+        }
+        intent.putExtra("names", names);
+        intent.putExtra("ids", ids);
+        intent.putExtra("addresses", addresses);
+        intent.putExtra("latitudes", latitudes);
+        intent.putExtra("longitudes", longitudes);
+        intent.putExtra("phones", phones);
         startActivity(intent);
     }
 }

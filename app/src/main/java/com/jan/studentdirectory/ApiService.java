@@ -7,6 +7,6 @@ import retrofit2.http.GET;
 
 public interface ApiService {
 
-    @GET("api.txt")
+    @GET("api.php")
     Call<List<Student>> getStudents();
 }

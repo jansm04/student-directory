@@ -12,5 +12,6 @@
 /captures
 .externalNativeBuild
 .cxx
-gradle.properties
+local.properties
 app/src/main/res/values/keys.xml
+app/src/main/java/com/jan/studentdirectory/Properties.java
