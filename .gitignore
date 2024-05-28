@@ -12,5 +12,5 @@
 /captures
 .externalNativeBuild
 .cxx
-local.properties
+gradle.properties
 app/src/main/res/values/keys.xml
