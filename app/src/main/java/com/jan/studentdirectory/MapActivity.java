@@ -8,6 +8,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.location.FusedLocationProviderClient;
 
@@ -21,6 +22,8 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -28,11 +31,15 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class MapActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private FusedLocationProviderClient fusedLocationProviderClient;
     private MapView mapView;
     private GoogleMap map;
+    private Map<Marker, Student> markerStudentMap;
 
     private static final String MAPVIEW_BUNDLE_KEY = "MapViewBundleKey";
     int PERMISSION_ID = 44;
@@ -49,9 +56,9 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         setSupportActionBar(toolbar);
         mapView = findViewById(R.id.mapView);
         mapView.onCreate(mapViewBundle);
-
         mapView.getMapAsync(this);
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
+        markerStudentMap = new HashMap<>();
     }
 
     @Override
@@ -132,6 +139,58 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         mapView.onSaveInstanceState(mapViewBundle);
     }
 
+    public void getStudentLocations() {
+        Intent intent = getIntent();
+        String[] names = intent.getStringArrayExtra("names");
+        int[] ids = intent.getIntArrayExtra("ids");
+        String[] addresses = intent.getStringArrayExtra("addresses");
+        double[] latitudes = intent.getDoubleArrayExtra("latitudes");
+        double[] longitudes = intent.getDoubleArrayExtra("longitudes");
+        String[] phones = intent.getStringArrayExtra("phones");
+
+        if (names != null && ids != null & addresses != null && latitudes != null && longitudes != null && phones != null) {
+            for (int i = 0; i < names.length; i++) {
+                LatLng coordinates = new LatLng(latitudes[i], longitudes[i]);
+                Marker marker = map.addMarker(new MarkerOptions().position(coordinates));
+                markerStudentMap.put(marker, new Student(names[i], ids[i], addresses[i], latitudes[i], longitudes[i], phones[i]));
+            }
+        }
+    }
+
+    private void createInfoWindowAdapter() {
+        this.map.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
+            @Override
+            public View getInfoWindow(@NonNull Marker marker) {
+                // Use the default info window frame
+                return null;
+            }
+
+            @SuppressLint("SetTextI18n")
+            @Override
+            public View getInfoContents(@NonNull Marker marker) {
+                // Custom view for info window content
+                @SuppressLint("InflateParams") View view = getLayoutInflater().inflate(R.layout.custom_info_window, null);
+
+                TextView title = view.findViewById(R.id.title);
+                TextView id = view.findViewById(R.id.id);
+                TextView address = view.findViewById(R.id.address);
+                TextView phone = view.findViewById(R.id.phone);
+                TextView coordinates = view.findViewById(R.id.coordinates);
+
+                Student student = markerStudentMap.get(marker);
+                if (student != null) {
+                    title.setText(student.getName());
+                    id.setText("ID: " + student.getStudentId());
+                    address.setText(student.getAddress());
+                    phone.setText(student.getPhone());
+                    coordinates.setText(student.getLatitude() + ", " + student.getLongitude());
+                }
+
+                return view;
+            }
+        });
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -154,8 +213,9 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     public void onMapReady(@NonNull GoogleMap map) {
         this.map = map;
         getLastLocation();
+        getStudentLocations();
+        createInfoWindowAdapter();
     }
-
 
     @Override
     protected void onPause() {
