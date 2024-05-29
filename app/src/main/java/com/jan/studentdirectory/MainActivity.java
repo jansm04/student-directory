@@ -116,6 +116,7 @@ public class MainActivity extends AppCompatActivity {
             intent.putExtra("latitude", student.getLatitude());
             intent.putExtra("longitude", student.getLongitude());
             intent.putExtra("phone", student.getPhone());
+            intent.putExtra("image", student.getImage());
             startActivity(intent);
         });
         return details;
@@ -130,6 +131,7 @@ public class MainActivity extends AppCompatActivity {
         double[] latitudes = new double[n];
         double[] longitudes = new double[n];
         String[] phones = new String[n];
+        String[] images = new String[n];
         for (int i = 0; i < n; i++) {
             Student student = students.get(i);
             names[i] = student.getName();
@@ -138,6 +140,7 @@ public class MainActivity extends AppCompatActivity {
             latitudes[i] = student.getLatitude();
             longitudes[i] = student.getLongitude();
             phones[i] = student.getPhone();
+            images[i] = student.getImage();
         }
         intent.putExtra("names", names);
         intent.putExtra("ids", ids);
@@ -145,6 +148,7 @@ public class MainActivity extends AppCompatActivity {
         intent.putExtra("latitudes", latitudes);
         intent.putExtra("longitudes", longitudes);
         intent.putExtra("phones", phones);
+        intent.putExtra("images", images);
         startActivity(intent);
     }
 }

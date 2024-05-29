@@ -16,14 +16,17 @@ public class Student {
     double longitude;
     @SerializedName("phone")
     String phone;
+    @SerializedName("image")
+    String image;
 
-    public Student(String name, int studentId, String address, double latitude, double longitude, String phone) {
+    public Student(String name, int studentId, String address, double latitude, double longitude, String phone, String image) {
         this.name = name;
         this.studentId = studentId;
         this.address = address;
         this.latitude = latitude;
         this.longitude = longitude;
         this.phone = phone;
+        this.image = image;
     }
 
     public String getName() {
@@ -44,6 +47,7 @@ public class Student {
     public String getPhone() {
         return phone;
     }
+    public String getImage() { return image; }
     public void setName(String name) {
         this.name = name;
     }
@@ -62,4 +66,5 @@ public class Student {
     public void setPhone(String phone) {
         this.phone = phone;
     }
+    public void setImage(String image) { this.image = image; }
 }

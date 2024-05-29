@@ -11,6 +11,13 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.location.FusedLocationProviderClient;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.OkHttp3Downloader;
+import com.squareup.picasso.Picasso;
+
+import okhttp3.Credentials;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -23,6 +30,7 @@ import android.provider.Settings;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,8 +39,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 
+import java.sql.Time;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 public class MapActivity extends AppCompatActivity implements OnMapReadyCallback {
 
@@ -40,6 +50,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private MapView mapView;
     private GoogleMap map;
     private Map<Marker, Student> markerStudentMap;
+    private boolean isFirstTimeShowingInfoWindow = true;
 
     private static final String MAPVIEW_BUNDLE_KEY = "MapViewBundleKey";
     int PERMISSION_ID = 44;
@@ -147,12 +158,13 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         double[] latitudes = intent.getDoubleArrayExtra("latitudes");
         double[] longitudes = intent.getDoubleArrayExtra("longitudes");
         String[] phones = intent.getStringArrayExtra("phones");
+        String[] images = intent.getStringArrayExtra("images");
 
-        if (names != null && ids != null & addresses != null && latitudes != null && longitudes != null && phones != null) {
+        if (names != null && ids != null & addresses != null && latitudes != null && longitudes != null && phones != null && images != null) {
             for (int i = 0; i < names.length; i++) {
                 LatLng coordinates = new LatLng(latitudes[i], longitudes[i]);
                 Marker marker = map.addMarker(new MarkerOptions().position(coordinates));
-                markerStudentMap.put(marker, new Student(names[i], ids[i], addresses[i], latitudes[i], longitudes[i], phones[i]));
+                markerStudentMap.put(marker, new Student(names[i], ids[i], addresses[i], latitudes[i], longitudes[i], phones[i], images[i]));
             }
         }
     }
@@ -176,6 +188,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 TextView address = view.findViewById(R.id.address);
                 TextView phone = view.findViewById(R.id.phone);
                 TextView coordinates = view.findViewById(R.id.coordinates);
+                ImageView image = view.findViewById(R.id.image);
 
                 Student student = markerStudentMap.get(marker);
                 if (student != null) {
@@ -184,8 +197,33 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                     address.setText(student.getAddress());
                     phone.setText(student.getPhone());
                     coordinates.setText(student.getLatitude() + ", " + student.getLongitude());
-                }
 
+                    // set image url
+                    String credential = Credentials.basic(Properties.USERNAME, Properties.PASSWORD);
+                    OkHttpClient okHttpClient = new OkHttpClient.Builder()
+                            .addInterceptor(chain -> {
+                                Request original = chain.request();
+                                Request.Builder requestBuilder = original.newBuilder()
+                                        .header("Authorization", credential);
+                                Request request = requestBuilder.build();
+                                return chain.proceed(request);
+                            })
+                            .build();
+
+                    Picasso picasso = new Picasso.Builder(getApplicationContext())
+                            .downloader(new OkHttp3Downloader(okHttpClient))
+                            .build();
+
+                    String imageUrl = student.getImage();
+                    picasso.setIndicatorsEnabled(true);
+                    picasso.setLoggingEnabled(true);
+                    if (isFirstTimeShowingInfoWindow) {
+                        isFirstTimeShowingInfoWindow = false;
+                        picasso.load(imageUrl).into(image, new MarkerCallback(marker));
+                    } else {
+                        picasso.load(imageUrl).into(image);
+                    }
+                }
                 return view;
             }
         });
