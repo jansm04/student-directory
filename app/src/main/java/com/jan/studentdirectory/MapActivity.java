@@ -26,11 +26,14 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.Settings;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -42,7 +45,14 @@ import androidx.core.app.ActivityCompat;
 import java.sql.Time;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Executors;
+import java.util.concurrent.FutureTask;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.Condition;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class MapActivity extends AppCompatActivity implements OnMapReadyCallback {
 
@@ -50,7 +60,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private MapView mapView;
     private GoogleMap map;
     private Map<Marker, Student> markerStudentMap;
-    private boolean isFirstTimeShowingInfoWindow = true;
+    private Map<Marker, ImageView> markerImageMap;
 
     private static final String MAPVIEW_BUNDLE_KEY = "MapViewBundleKey";
     int PERMISSION_ID = 44;
@@ -70,6 +80,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         mapView.getMapAsync(this);
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
         markerStudentMap = new HashMap<>();
+        markerImageMap = new HashMap<>();
     }
 
     @Override
@@ -165,6 +176,37 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 LatLng coordinates = new LatLng(latitudes[i], longitudes[i]);
                 Marker marker = map.addMarker(new MarkerOptions().position(coordinates));
                 markerStudentMap.put(marker, new Student(names[i], ids[i], addresses[i], latitudes[i], longitudes[i], phones[i], images[i]));
+                ImageView imageView = new ImageView(this);
+                String credential = Credentials.basic(Properties.USERNAME, Properties.PASSWORD);
+                OkHttpClient okHttpClient = new OkHttpClient.Builder()
+                        .addInterceptor(chain -> {
+                            Request original = chain.request();
+                            Request.Builder requestBuilder = original.newBuilder()
+                                    .header("Authorization", credential);
+                            Request request = requestBuilder.build();
+                            return chain.proceed(request);
+                        })
+                        .build();
+
+                Picasso picasso = new Picasso.Builder(getApplicationContext())
+                        .downloader(new OkHttp3Downloader(okHttpClient))
+                        .build();
+
+                String imageUrl = images[i];
+                picasso.setIndicatorsEnabled(true);
+                picasso.setLoggingEnabled(true);
+
+                picasso.load(imageUrl).into(imageView, new Callback() {
+                    @Override
+                    public void onSuccess() {
+                        markerImageMap.put(marker, imageView);
+                    }
+
+                    @Override
+                    public void onError(Exception e) {
+                        System.out.println("Failed to fetch image from URL.");
+                    }
+                });
             }
         }
     }
@@ -181,48 +223,28 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             @Override
             public View getInfoContents(@NonNull Marker marker) {
                 // Custom view for info window content
-                @SuppressLint("InflateParams") View view = getLayoutInflater().inflate(R.layout.custom_info_window, null);
+                LinearLayout view = (LinearLayout) getLayoutInflater().inflate(R.layout.custom_info_window, null);
 
                 TextView title = view.findViewById(R.id.title);
                 TextView id = view.findViewById(R.id.id);
                 TextView address = view.findViewById(R.id.address);
                 TextView phone = view.findViewById(R.id.phone);
                 TextView coordinates = view.findViewById(R.id.coordinates);
-                ImageView image = view.findViewById(R.id.image);
 
+                ImageView image = markerImageMap.get(marker);
                 Student student = markerStudentMap.get(marker);
-                if (student != null) {
+
+                if (student != null && image != null) {
                     title.setText(student.getName());
                     id.setText("ID: " + student.getStudentId());
                     address.setText(student.getAddress());
                     phone.setText(student.getPhone());
                     coordinates.setText(student.getLatitude() + ", " + student.getLongitude());
 
-                    // set image url
-                    String credential = Credentials.basic(Properties.USERNAME, Properties.PASSWORD);
-                    OkHttpClient okHttpClient = new OkHttpClient.Builder()
-                            .addInterceptor(chain -> {
-                                Request original = chain.request();
-                                Request.Builder requestBuilder = original.newBuilder()
-                                        .header("Authorization", credential);
-                                Request request = requestBuilder.build();
-                                return chain.proceed(request);
-                            })
-                            .build();
-
-                    Picasso picasso = new Picasso.Builder(getApplicationContext())
-                            .downloader(new OkHttp3Downloader(okHttpClient))
-                            .build();
-
-                    String imageUrl = student.getImage();
-                    picasso.setIndicatorsEnabled(true);
-                    picasso.setLoggingEnabled(true);
-                    if (isFirstTimeShowingInfoWindow) {
-                        isFirstTimeShowingInfoWindow = false;
-                        picasso.load(imageUrl).into(image, new MarkerCallback(marker));
-                    } else {
-                        picasso.load(imageUrl).into(image);
-                    }
+                    image.setLayoutParams(new LinearLayout.LayoutParams(
+                            ViewGroup.LayoutParams.WRAP_CONTENT,
+                            ViewGroup.LayoutParams.WRAP_CONTENT));
+                    view.addView(image);
                 }
                 return view;
             }
