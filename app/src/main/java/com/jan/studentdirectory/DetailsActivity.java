@@ -44,15 +44,7 @@ public class DetailsActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
         init();
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.toolbar_secondary, menu);
-        return true;
     }
 
     public void init() {
@@ -140,5 +132,23 @@ public class DetailsActivity extends AppCompatActivity {
     public void handleHomeButton(MenuItem item) {
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
+    }
+
+    public void handleMapButton(MenuItem item) {
+        startActivityWithSameData(MapActivity.class);
+    }
+
+    public void handleWebButton(MenuItem item) {
+        startActivityWithSameData(WebActivity.class);
+    }
+
+    public void startActivityWithSameData(Class<?> targetActivity) {
+        Intent currentIntent = getIntent();
+        Intent newIntent = new Intent(this, targetActivity);
+        Bundle extras = currentIntent.getExtras();
+        if (extras != null) {
+            newIntent.putExtras(extras);
+        }
+        startActivity(newIntent);
     }
 }

@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -17,6 +18,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,15 +66,11 @@ public class MainActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        populateStudents();
-    }
+        // Uncheck all tabs (not typically recommended, but possible)
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
+        bottomNavigationView.getMenu().getItem(0).setChecked(true);
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.toolbar_primary, menu);
-        return true;
+        populateStudents();
     }
 
     public void init() {
@@ -117,13 +116,26 @@ public class MainActivity extends AppCompatActivity {
             intent.putExtra("longitude", student.getLongitude());
             intent.putExtra("phone", student.getPhone());
             intent.putExtra("image", student.getImage());
-            startActivity(intent);
+            packStudentsAndStart(intent);
         });
         return details;
     }
 
+    public void handleHomeButton(MenuItem item) {
+        // do nothing
+    }
+
     public void handleMapButton(MenuItem item) {
         Intent intent = new Intent(this, MapActivity.class);
+        packStudentsAndStart(intent);
+    }
+
+    public void handleWebButton(MenuItem item) {
+        Intent intent = new Intent(this, WebActivity.class);
+        packStudentsAndStart(intent);
+    }
+
+    public void packStudentsAndStart(Intent intent) {
         int n = students.size();
         String[] names = new String[n];
         int[] ids = new int[n];

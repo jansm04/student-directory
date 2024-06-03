@@ -11,6 +11,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.OkHttp3Downloader;
 import com.squareup.picasso.Picasso;
@@ -73,20 +74,20 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         if (savedInstanceState != null) {
             mapViewBundle = savedInstanceState.getBundle(MAPVIEW_BUNDLE_KEY);
         }
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+        }
         mapView = findViewById(R.id.mapView);
         mapView.onCreate(mapViewBundle);
+
         mapView.getMapAsync(this);
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
+
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
+        bottomNavigationView.getMenu().getItem(1).setChecked(true);
+
         markerStudentMap = new HashMap<>();
         markerImageMap = new HashMap<>();
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.toolbar_secondary, menu);
-        return true;
     }
 
     @SuppressLint("MissingPermission")
@@ -300,4 +301,17 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         startActivity(intent);
     }
 
+    public void handleMapButton(MenuItem item) {
+        // do nothing
+    }
+
+    public void handleWebButton(MenuItem item) {
+        Intent currentIntent = getIntent();
+        Intent newIntent = new Intent(this, WebActivity.class);
+        Bundle extras = currentIntent.getExtras();
+        if (extras != null) {
+            newIntent.putExtras(extras);
+        }
+        startActivity(newIntent);
+    }
 }
