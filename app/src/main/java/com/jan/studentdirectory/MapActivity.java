@@ -27,9 +27,7 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.os.Handler;
 import android.provider.Settings;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,21 +37,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 
-import java.sql.Time;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Executors;
-import java.util.concurrent.FutureTask;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.locks.Condition;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 
 public class MapActivity extends TabHandler implements OnMapReadyCallback {
 
@@ -224,7 +211,7 @@ public class MapActivity extends TabHandler implements OnMapReadyCallback {
             @Override
             public View getInfoContents(@NonNull Marker marker) {
                 // Custom view for info window content
-                LinearLayout view = (LinearLayout) getLayoutInflater().inflate(R.layout.custom_info_window, null);
+                @SuppressLint("InflateParams") LinearLayout view = (LinearLayout) getLayoutInflater().inflate(R.layout.custom_info_window, null);
 
                 TextView title = view.findViewById(R.id.title);
                 TextView id = view.findViewById(R.id.id);
