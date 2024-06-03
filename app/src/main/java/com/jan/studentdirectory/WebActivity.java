@@ -14,7 +14,7 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-public class WebActivity extends AppCompatActivity {
+public class WebActivity extends TabHandler {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,13 +42,7 @@ public class WebActivity extends AppCompatActivity {
     }
 
     public void handleMapButton(MenuItem item) {
-        Intent currentIntent = getIntent();
-        Intent newIntent = new Intent(this, MapActivity.class);
-        Bundle extras = currentIntent.getExtras();
-        if (extras != null) {
-            newIntent.putExtras(extras);
-        }
-        startActivity(newIntent);
+        startActivityWithSameData(MapActivity.class);
     }
 
     public void handleWebButton(MenuItem item) {

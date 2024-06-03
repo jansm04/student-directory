@@ -28,7 +28,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends TabHandler {
 
     List<Student> students = new ArrayList<>();
 
@@ -73,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
         populateStudents();
     }
 
-    public void init() {
+    private void init() {
         TableLayout table = findViewById(R.id.table);
         TableRow.LayoutParams rowParams = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT);
         TableRow.LayoutParams elementParams = new TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, 1);
@@ -135,15 +135,12 @@ public class MainActivity extends AppCompatActivity {
         packStudentsAndStart(intent);
     }
 
-    public void packStudentsAndStart(Intent intent) {
+    private void packStudentsAndStart(Intent intent) {
         int n = students.size();
-        String[] names = new String[n];
+        String[] names = new String[n], addresses = new String[n], phones = new String[n], images = new String[n];
         int[] ids = new int[n];
-        String[] addresses = new String[n];
-        double[] latitudes = new double[n];
-        double[] longitudes = new double[n];
-        String[] phones = new String[n];
-        String[] images = new String[n];
+        double[] latitudes = new double[n], longitudes = new double[n];
+
         for (int i = 0; i < n; i++) {
             Student student = students.get(i);
             names[i] = student.getName();

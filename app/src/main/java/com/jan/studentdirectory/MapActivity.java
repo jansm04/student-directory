@@ -55,7 +55,7 @@ import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-public class MapActivity extends AppCompatActivity implements OnMapReadyCallback {
+public class MapActivity extends TabHandler implements OnMapReadyCallback {
 
     private FusedLocationProviderClient fusedLocationProviderClient;
     private MapView mapView;
@@ -306,12 +306,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     }
 
     public void handleWebButton(MenuItem item) {
-        Intent currentIntent = getIntent();
-        Intent newIntent = new Intent(this, WebActivity.class);
-        Bundle extras = currentIntent.getExtras();
-        if (extras != null) {
-            newIntent.putExtras(extras);
-        }
-        startActivity(newIntent);
+        startActivityWithSameData(WebActivity.class);
     }
 }

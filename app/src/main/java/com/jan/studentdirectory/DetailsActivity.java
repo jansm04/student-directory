@@ -30,7 +30,7 @@ import okhttp3.Credentials;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 
-public class DetailsActivity extends AppCompatActivity {
+public class DetailsActivity extends TabHandler {
 
     private static final int REQUEST_PHONE_CALL = 1;
 
@@ -140,15 +140,5 @@ public class DetailsActivity extends AppCompatActivity {
 
     public void handleWebButton(MenuItem item) {
         startActivityWithSameData(WebActivity.class);
-    }
-
-    public void startActivityWithSameData(Class<?> targetActivity) {
-        Intent currentIntent = getIntent();
-        Intent newIntent = new Intent(this, targetActivity);
-        Bundle extras = currentIntent.getExtras();
-        if (extras != null) {
-            newIntent.putExtras(extras);
-        }
-        startActivity(newIntent);
     }
 }

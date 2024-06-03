@@ -12,7 +12,7 @@
         android:title="@string/map" />
     <item
         android:id="@+id/nav_web"
-        android:icon="@drawable/icons8_home"
+        android:icon="@drawable/baseline_cloud_24"
         android:onClick="handleWebButton"
         android:title="@string/web" />
 </menu>
