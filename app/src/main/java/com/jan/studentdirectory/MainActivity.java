@@ -1,6 +1,7 @@
 package com.jan.studentdirectory;
 
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.widget.Button;
@@ -38,7 +39,8 @@ public class MainActivity extends TabHandler {
                 if (response.isSuccessful() && response.body() != null) {
                     students.clear();
                     students.addAll(response.body());
-                    init();
+                    createTable();
+                    createCache();
                 } else {
                     Toast.makeText(MainActivity.this, "Response not successful", Toast.LENGTH_SHORT).show();
                 }
@@ -67,11 +69,9 @@ public class MainActivity extends TabHandler {
         bottomNavigationView.getMenu().getItem(0).setChecked(true);
 
         populateStudents();
-        CacheManager cacheManager = new CacheManager();
-        cacheManager.startInterval(5);
     }
 
-    private void init() {
+    private void createTable() {
         TableLayout table = findViewById(R.id.table);
         TableRow.LayoutParams rowParams = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT);
         TableRow.LayoutParams elementParams = new TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, 1);
@@ -98,6 +98,21 @@ public class MainActivity extends TabHandler {
 
             table.addView(row, rowParams);
         }
+    }
+
+    private void createCache() {
+        SQLManager sqlManager = new SQLManager(getApplicationContext());
+        clearCache(sqlManager);
+        CacheManager cacheManager = new CacheManager(sqlManager, students);
+        cacheManager.startInterval(5);
+    }
+
+    private void clearCache(SQLManager sqlManager) {
+        SQLiteDatabase db = sqlManager.getWritableDatabase();
+        String selection = UserContract.UserEntry.COLUMN_NAME_STUDENT_NAME + " LIKE ?";
+        String[] selectionArgs = { "test_name" };
+        int deletedRows = db.delete(UserContract.UserEntry.TABLE_NAME, selection, selectionArgs);
+        System.out.println("Successfully deleted " + deletedRows + " rows.");
     }
 
     @NonNull
