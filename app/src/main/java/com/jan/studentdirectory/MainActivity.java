@@ -67,6 +67,8 @@ public class MainActivity extends TabHandler {
         bottomNavigationView.getMenu().getItem(0).setChecked(true);
 
         populateStudents();
+        CacheManager cacheManager = new CacheManager();
+        cacheManager.startInterval(5);
     }
 
     private void init() {
