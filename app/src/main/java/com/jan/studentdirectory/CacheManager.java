@@ -13,8 +13,13 @@ public class CacheManager {
         this.students = students;
     }
 
-    Timer timer = new Timer();
-    public void startInterval(int seconds) {
+    public void startCachingInterval(int seconds) {
+        Timer timer = new Timer();
         timer.schedule(new CacheTask(sqlManager, students), 0, seconds * 1000L);
+    }
+
+    public void startClearingInterval(int seconds) {
+        Timer timer = new Timer();
+        timer.schedule(new PostTask(sqlManager), 1000, seconds * 1000L);
     }
 }

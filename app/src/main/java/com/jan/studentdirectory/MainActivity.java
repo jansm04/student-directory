@@ -1,7 +1,6 @@
 package com.jan.studentdirectory;
 
 import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.widget.Button;
@@ -40,7 +39,7 @@ public class MainActivity extends TabHandler {
                     students.clear();
                     students.addAll(response.body());
                     createTable();
-                    createCache();
+                    createCacheManager();
                 } else {
                     Toast.makeText(MainActivity.this, "Response not successful", Toast.LENGTH_SHORT).show();
                 }
@@ -100,19 +99,15 @@ public class MainActivity extends TabHandler {
         }
     }
 
-    private void createCache() {
+    private void createCacheManager() {
         SQLManager sqlManager = new SQLManager(getApplicationContext());
-        clearCache(sqlManager);
         CacheManager cacheManager = new CacheManager(sqlManager, students);
-        cacheManager.startInterval(5);
-    }
 
-    private void clearCache(SQLManager sqlManager) {
-        SQLiteDatabase db = sqlManager.getWritableDatabase();
-        String selection = UserContract.UserEntry.COLUMN_NAME_STUDENT_NAME + " LIKE ?";
-        String[] selectionArgs = { "test_name" };
-        int deletedRows = db.delete(UserContract.UserEntry.TABLE_NAME, selection, selectionArgs);
-        System.out.println("Successfully deleted " + deletedRows + " rows.");
+        // add data to cache every 15 seconds
+        cacheManager.startCachingInterval(15);
+
+        // try to send data to api endpoint and clear cache every 60 seconds
+        cacheManager.startClearingInterval(60);
     }
 
     @NonNull
