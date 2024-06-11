@@ -104,10 +104,10 @@ public class MainActivity extends TabHandler {
         CacheManager cacheManager = new CacheManager(sqlManager, students);
 
         // add data to cache every 15 seconds
-        cacheManager.startCachingInterval(15);
+        cacheManager.startCachingInterval(5);
 
         // try to send data to api endpoint and clear cache every 60 seconds
-        cacheManager.startClearingInterval(60);
+        cacheManager.startClearingInterval(20);
     }
 
     @NonNull
