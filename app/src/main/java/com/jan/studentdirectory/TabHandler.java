@@ -2,12 +2,19 @@ package com.jan.studentdirectory;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.activity.OnBackPressedDispatcher;
 import androidx.appcompat.app.AppCompatActivity;
 
-public class TabHandler extends AppCompatActivity {
+public abstract class TabHandler extends AppCompatActivity {
+
+    public abstract void handleHomeButton(MenuItem item);
+
+    public abstract void handleMapButton(MenuItem item);
+
+    public abstract void handleWebButton(MenuItem item);
 
     public void startActivityWithSameData(Class<?> targetActivity) {
         Intent currentIntent = getIntent();
@@ -28,4 +35,5 @@ public class TabHandler extends AppCompatActivity {
             }
         });
     }
+
 }
