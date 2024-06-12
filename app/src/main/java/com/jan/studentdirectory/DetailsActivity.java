@@ -10,7 +10,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -123,15 +122,18 @@ public class DetailsActivity extends TabHandler {
         startActivity(callIntent);
     }
 
+    @Override
     public void handleHomeButton(MenuItem item) {
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
     }
 
+    @Override
     public void handleMapButton(MenuItem item) {
         startActivityWithSameData(MapActivity.class);
     }
 
+    @Override
     public void handleWebButton(MenuItem item) {
         startActivityWithSameData(WebActivity.class);
     }

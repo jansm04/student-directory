@@ -10,11 +10,11 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public abstract class TabHandler extends AppCompatActivity {
 
-    public abstract void handleHomeButton(MenuItem item);
+    public void handleHomeButton(MenuItem item) {}
 
-    public abstract void handleMapButton(MenuItem item);
+    public void handleMapButton(MenuItem item) {}
 
-    public abstract void handleWebButton(MenuItem item);
+    public void handleWebButton(MenuItem item) {}
 
     public void startActivityWithSameData(Class<?> targetActivity) {
         Intent currentIntent = getIntent();

@@ -9,9 +9,6 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
-import androidx.activity.OnBackPressedCallback;
-import androidx.activity.OnBackPressedDispatcher;
 import androidx.annotation.NonNull;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -131,15 +128,13 @@ public class MainActivity extends TabHandler {
         return details;
     }
 
-    public void handleHomeButton(MenuItem item) {
-        // do nothing
-    }
-
+    @Override
     public void handleMapButton(MenuItem item) {
         Intent intent = new Intent(this, MapActivity.class);
         packStudentsAndStart(intent);
     }
 
+    @Override
     public void handleWebButton(MenuItem item) {
         Intent intent = new Intent(this, WebActivity.class);
         packStudentsAndStart(intent);

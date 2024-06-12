@@ -34,16 +34,15 @@ public class WebActivity extends TabHandler {
         webView.loadUrl("https://account.nationalshunt.com/");
     }
 
+    @Override
     public void handleHomeButton(MenuItem item) {
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
     }
 
+    @Override
     public void handleMapButton(MenuItem item) {
         startActivityWithSameData(MapActivity.class);
     }
 
-    public void handleWebButton(MenuItem item) {
-        // do nothing
-    }
 }

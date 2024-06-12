@@ -283,15 +283,13 @@ public class MapActivity extends TabHandler implements OnMapReadyCallback {
         mapView.onLowMemory();
     }
 
+    @Override
     public void handleHomeButton(MenuItem item) {
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
     }
 
-    public void handleMapButton(MenuItem item) {
-        // do nothing
-    }
-
+    @Override
     public void handleWebButton(MenuItem item) {
         startActivityWithSameData(WebActivity.class);
     }
