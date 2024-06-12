@@ -3,6 +3,8 @@ package com.jan.studentdirectory;
 import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.activity.OnBackPressedCallback;
+import androidx.activity.OnBackPressedDispatcher;
 import androidx.appcompat.app.AppCompatActivity;
 
 public class TabHandler extends AppCompatActivity {
@@ -15,5 +17,15 @@ public class TabHandler extends AppCompatActivity {
             newIntent.putExtras(extras);
         }
         startActivity(newIntent);
+    }
+
+    public void moveTaskToBackgroundOnBack() {
+        OnBackPressedDispatcher onBackPressedDispatcher = getOnBackPressedDispatcher();
+        onBackPressedDispatcher.addCallback(new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                moveTaskToBack(true);
+            }
+        });
     }
 }

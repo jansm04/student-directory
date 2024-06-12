@@ -10,13 +10,11 @@
 
     <TableLayout
         android:id="@+id/table"
-        android:layout_width="345dp"
-        android:layout_height="492dp"
-        android:layout_marginTop="96dp"
-        android:layout_marginBottom="82dp"
+        android:layout_width="323dp"
+        android:layout_height="589dp"
+        android:layout_marginStart="35dp"
+        android:layout_marginTop="59dp"
         android:orientation="vertical"
-        app:layout_constraintBottom_toTopOf="@+id/bottom_navigation"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -57,12 +55,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_marginTop="82dp"
         android:background="?android:attr/windowBackground"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/table"
         app:menu="@menu/bottom_navigation"
-        tools:ignore="VisualLintBottomNav,VisualLintBounds" />
+        tools:ignore="VisualLintBottomNav" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

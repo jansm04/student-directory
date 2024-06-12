@@ -72,6 +72,7 @@ public class MapActivity extends TabHandler implements OnMapReadyCallback {
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
         bottomNavigationView.getMenu().getItem(1).setChecked(true);
+        moveTaskToBackgroundOnBack();
 
         markerStudentMap = new HashMap<>();
         markerImageMap = new HashMap<>();
@@ -116,7 +117,6 @@ public class MapActivity extends TabHandler implements OnMapReadyCallback {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        System.out.println("Reached here. Code - " + requestCode);
         if (requestCode == 44) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 System.out.println("Permission granted.");

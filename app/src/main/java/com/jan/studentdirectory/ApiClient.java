@@ -6,7 +6,7 @@ import okhttp3.Credentials;
 import okhttp3.OkHttpClient;
 
 public class ApiClient {
-    private static final String BASE_URL = "https://www.automatesolutions.ca/centrilogic/";
+
     private static final OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
     private static ApiService apiService;
 
@@ -24,7 +24,7 @@ public class ApiClient {
             if (!httpClient.interceptors().contains(interceptor)) {
                 httpClient.addInterceptor(interceptor);
                 if (apiService == null) {
-                    apiService = RetrofitClient.getClient(BASE_URL, httpClient.build()).create(ApiService.class);
+                    apiService = RetrofitClient.getClient(Properties.BASE_URL, httpClient.build()).create(ApiService.class);
                 }
             }
         }

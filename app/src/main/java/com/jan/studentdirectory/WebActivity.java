@@ -28,6 +28,7 @@ public class WebActivity extends TabHandler {
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
         bottomNavigationView.getMenu().getItem(2).setChecked(true);
+        moveTaskToBackgroundOnBack();
 
         WebView webView = findViewById(R.id.web);
         webView.loadUrl("https://account.nationalshunt.com/");
