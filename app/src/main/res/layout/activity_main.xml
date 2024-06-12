@@ -8,47 +8,59 @@
     tools:context=".MainActivity">
     <!-- res/layout/main_activity.xml -->
 
-    <TableLayout
-        android:id="@+id/table"
-        android:layout_width="323dp"
-        android:layout_height="589dp"
-        android:layout_marginStart="35dp"
-        android:layout_marginTop="59dp"
-        android:orientation="vertical"
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fillViewport="true"
+        android:layout_alignParentTop="true"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/bottom_navigation">
 
-        <!-- Table Header -->
-        <TableRow
+        <TableLayout
+            android:id="@+id/table"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="8dp"
-            tools:ignore="UselessParent">
+            android:orientation="vertical"
+            android:padding="30dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            >
 
-            <TextView
-                android:layout_width="0dp"
+            <!-- Table Header -->
+            <TableRow
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/name"
-                android:textStyle="bold" />
+                android:padding="8dp"
+                tools:ignore="UselessParent">
 
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/student_id"
-                android:textStyle="bold" />
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/name"
+                    android:textStyle="bold" />
 
-            <!-- Add an empty view to occupy the button column -->
-            <View
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_weight="1" />
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/student_id"
+                    android:textStyle="bold" />
 
-        </TableRow>
+                <!-- Add an empty view to occupy the button column -->
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_weight="1" />
+
+            </TableRow>
 
 
-    </TableLayout>
+        </TableLayout>
+
+    </ScrollView>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation"
@@ -62,6 +74,5 @@
         app:layout_constraintStart_toStartOf="parent"
         app:menu="@menu/bottom_navigation"
         tools:ignore="VisualLintBottomNav" />
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>
