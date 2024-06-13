@@ -31,7 +31,7 @@ public class WebActivity extends TabHandler {
         moveTaskToBackgroundOnBack();
 
         WebView webView = findViewById(R.id.web);
-        webView.loadUrl("https://account.nationalshunt.com/");
+        webView.loadUrl(Properties.WEB_VIEW_URL);
     }
 
     @Override

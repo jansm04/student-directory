@@ -5,8 +5,11 @@ import android.database.sqlite.SQLiteDatabase;
 
 import androidx.annotation.NonNull;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.TimerTask;
 
 import retrofit2.Call;
@@ -46,16 +49,20 @@ public class PostTask extends TimerTask {
         }
         cursor.close();
 
+        String timeAtPost = getCurrentTimestamp();
+        System.out.println("Posting " + students.size() + " records to API endpoint at " + timeAtPost);
         ApiService apiService = ApiClient.createService(Properties.USERNAME, Properties.PASSWORD);
         Call<Void> call = apiService.postData(students);
 
         call.enqueue(new Callback<Void>() {
             @Override
             public void onResponse(@NonNull Call<Void> call, @NonNull Response<Void> response) {
-                System.out.println("Successfully posted " + students.size() + " records to API endpoint.");
+                System.out.println("Successfully posted " + students.size() + " records to API endpoint at " + getCurrentTimestamp());
 
                 // clear cache if data is successfully posted
-                int deletedRows = db.delete(UserContract.UserEntry.TABLE_NAME, null, null);
+                String whereClause = UserContract.UserEntry.COLUMN_NAME_TIMESTAMP + " <= ?";
+                String[] whereArgs = { timeAtPost };
+                int deletedRows = db.delete(UserContract.UserEntry.TABLE_NAME, whereClause, whereArgs);
                 System.out.println("Successfully deleted " + deletedRows + " rows.");
             }
 
@@ -64,5 +71,10 @@ public class PostTask extends TimerTask {
                 System.out.println("An error occurred trying to post the data. As a result, the cache was not yet cleared.");
             }
         });
+    }
+
+    private String getCurrentTimestamp() {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+        return sdf.format(new Date());
     }
 }

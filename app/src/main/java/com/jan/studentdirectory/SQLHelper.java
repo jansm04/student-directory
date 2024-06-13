@@ -10,8 +10,10 @@ public class SQLHelper {
                     UserContract.UserEntry.COLUMN_NAME_ADDRESS + " TEXT," +
                     UserContract.UserEntry.COLUMN_NAME_LATITUDE + " REAL," +
                     UserContract.UserEntry.COLUMN_NAME_LONGITUDE + " REAL," +
-                    UserContract.UserEntry.COLUMN_NAME_PHONE + " TEXT)";
+                    UserContract.UserEntry.COLUMN_NAME_PHONE + " TEXT," +
+                    UserContract.UserEntry.COLUMN_NAME_TIMESTAMP + " TEXT)";
 
     public static final String SQL_DELETE_ENTRIES =
             "DROP TABLE IF EXISTS " + UserContract.UserEntry.TABLE_NAME;
-}
+
+ }
