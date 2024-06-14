@@ -1,4 +1,6 @@
-package com.jan.studentdirectory;
+package com.jan.studentdirectory.http;
+
+import com.jan.studentdirectory.Student;
 
 import java.util.List;
 

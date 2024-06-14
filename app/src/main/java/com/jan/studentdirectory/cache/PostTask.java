@@ -1,9 +1,14 @@
-package com.jan.studentdirectory;
+package com.jan.studentdirectory.cache;
 
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import androidx.annotation.NonNull;
+
+import com.jan.studentdirectory.Properties;
+import com.jan.studentdirectory.Student;
+import com.jan.studentdirectory.http.ApiClient;
+import com.jan.studentdirectory.http.ApiService;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;

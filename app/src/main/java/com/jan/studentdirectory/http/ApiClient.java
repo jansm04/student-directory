@@ -1,6 +1,8 @@
-package com.jan.studentdirectory;
+package com.jan.studentdirectory.http;
 
 import android.text.TextUtils;
+
+import com.jan.studentdirectory.Properties;
 
 import okhttp3.Credentials;
 import okhttp3.OkHttpClient;

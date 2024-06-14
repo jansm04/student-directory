@@ -1,4 +1,4 @@
-package com.jan.studentdirectory;
+package com.jan.studentdirectory.activities;
 
 import android.Manifest;
 
@@ -12,6 +12,9 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.jan.studentdirectory.Properties;
+import com.jan.studentdirectory.R;
+import com.jan.studentdirectory.Student;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.OkHttp3Downloader;
 import com.squareup.picasso.Picasso;

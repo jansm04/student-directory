@@ -1,4 +1,4 @@
-package com.jan.studentdirectory;
+package com.jan.studentdirectory.cache;
 
 public class SQLHelper {
 

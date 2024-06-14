@@ -1,4 +1,4 @@
-package com.jan.studentdirectory;
+package com.jan.studentdirectory.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,6 +10,8 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.jan.studentdirectory.Properties;
+import com.jan.studentdirectory.R;
 
 public class WebActivity extends TabHandler {
 

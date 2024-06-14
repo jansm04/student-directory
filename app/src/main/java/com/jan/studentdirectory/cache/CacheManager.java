@@ -1,4 +1,6 @@
-package com.jan.studentdirectory;
+package com.jan.studentdirectory.cache;
+
+import com.jan.studentdirectory.Student;
 
 import java.util.List;
 import java.util.Timer;

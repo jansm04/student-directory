@@ -1,7 +1,9 @@
-package com.jan.studentdirectory;
+package com.jan.studentdirectory.cache;
 
 import android.content.ContentValues;
 import android.database.sqlite.SQLiteDatabase;
+
+import com.jan.studentdirectory.Student;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;

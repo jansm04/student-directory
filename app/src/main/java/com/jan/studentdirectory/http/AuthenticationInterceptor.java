@@ -1,4 +1,4 @@
-package com.jan.studentdirectory;
+package com.jan.studentdirectory.http;
 
 import androidx.annotation.NonNull;
 

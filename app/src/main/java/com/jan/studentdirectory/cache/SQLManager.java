@@ -1,9 +1,11 @@
-package com.jan.studentdirectory;
+package com.jan.studentdirectory.cache;
 
 import android.content.Context;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+
+import com.jan.studentdirectory.cache.SQLHelper;
 
 public class SQLManager extends SQLiteOpenHelper {
 
