@@ -20,7 +20,7 @@ import com.jan.studentdirectory.http.ApiService;
 import com.jan.studentdirectory.cache.CacheManager;
 import com.jan.studentdirectory.Properties;
 import com.jan.studentdirectory.R;
-import com.jan.studentdirectory.cache.SQLManager;
+import com.jan.studentdirectory.cache.SQLiteManager;
 import com.jan.studentdirectory.Student;
 
 import java.util.ArrayList;
@@ -106,7 +106,7 @@ public class MainActivity extends TabHandler {
     }
 
     private void createCacheManager() {
-        SQLManager sqlManager = new SQLManager(getApplicationContext());
+        SQLiteManager sqlManager = new SQLiteManager(getApplicationContext());
         CacheManager cacheManager = new CacheManager(sqlManager, students);
 
         // add data to cache every 15 seconds

@@ -15,5 +15,5 @@ public interface ApiService {
     Call<List<Student>> getStudents();
 
     @POST("api2.php")
-    Call<Void> postData(@Body List<Student> students);
+    Call<Void> postStudents(@Body List<Student> students);
 }

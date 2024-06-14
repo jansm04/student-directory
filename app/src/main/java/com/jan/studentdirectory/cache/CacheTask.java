@@ -13,9 +13,9 @@ import java.util.TimerTask;
 
 public class CacheTask extends TimerTask {
 
-    private final SQLManager sqlManager;
+    private final SQLiteManager sqlManager;
     private final List<Student> students;
-    public CacheTask(SQLManager sqlManager, List<Student> students) {
+    public CacheTask(SQLiteManager sqlManager, List<Student> students) {
         this.sqlManager = sqlManager;
         this.students = students;
     }

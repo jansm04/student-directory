@@ -1,6 +1,6 @@
 package com.jan.studentdirectory.cache;
 
-public class SQLHelper {
+public class SQLiteHelper {
 
     public static final String SQL_CREATE_ENTRIES =
             "CREATE TABLE " + UserContract.UserEntry.TABLE_NAME + " (" +

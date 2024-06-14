@@ -21,11 +21,11 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class PostTask extends TimerTask {
+public class ClearTask extends TimerTask {
 
-    private final SQLManager sqlManager;
+    private final SQLiteManager sqlManager;
 
-    public PostTask(SQLManager sqlManager) {
+    public ClearTask(SQLiteManager sqlManager) {
         this.sqlManager = sqlManager;
     }
     @Override
@@ -57,7 +57,7 @@ public class PostTask extends TimerTask {
 
         System.out.println("Posting " + students.size() + " records to API endpoint at " + currentTimestamp);
         ApiService apiService = ApiClient.createService(Properties.USERNAME, Properties.PASSWORD);
-        Call<Void> call = apiService.postData(students);
+        Call<Void> call = apiService.postStudents(students);
 
         call.enqueue(new Callback<Void>() {
             @Override

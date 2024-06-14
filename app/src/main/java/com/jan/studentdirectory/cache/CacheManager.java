@@ -7,10 +7,10 @@ import java.util.Timer;
 
 public class CacheManager {
 
-    private final SQLManager sqlManager;
+    private final SQLiteManager sqlManager;
     private final List<Student> students;
 
-    public CacheManager(SQLManager sqlManager, List<Student> students) {
+    public CacheManager(SQLiteManager sqlManager, List<Student> students) {
         this.sqlManager = sqlManager;
         this.students = students;
     }
@@ -22,6 +22,6 @@ public class CacheManager {
 
     public void startClearingInterval(int seconds) {
         Timer timer = new Timer();
-        timer.schedule(new PostTask(sqlManager), 1000, seconds * 1000L);
+        timer.schedule(new ClearTask(sqlManager), 1000, seconds * 1000L);
     }
 }
