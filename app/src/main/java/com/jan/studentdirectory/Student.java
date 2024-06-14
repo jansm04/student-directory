@@ -50,8 +50,7 @@ public class Student {
     public String getPhone() {
         return phone;
     }
-    public String getImage() { return image; }
-    public String getTimestamp() {
-        return timestamp;
+    public String getImage() {
+        return image;
     }
 }
