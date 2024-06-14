@@ -18,8 +18,10 @@ public class Student {
     private final String phone;
     @SerializedName("image")
     private final String image;
+    @SerializedName("timestamp")
+    private final String timestamp;
 
-    public Student(String name, int studentId, String address, double latitude, double longitude, String phone, String image) {
+    public Student(String name, int studentId, String address, double latitude, double longitude, String phone, String image, String timestamp) {
         this.name = name;
         this.studentId = studentId;
         this.address = address;
@@ -27,6 +29,7 @@ public class Student {
         this.longitude = longitude;
         this.phone = phone;
         this.image = image;
+        this.timestamp = timestamp;
     }
 
     public String getName() {
@@ -48,4 +51,7 @@ public class Student {
         return phone;
     }
     public String getImage() { return image; }
+    public String getTimestamp() {
+        return timestamp;
+    }
 }

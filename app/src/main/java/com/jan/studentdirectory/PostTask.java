@@ -26,16 +26,13 @@ public class PostTask extends TimerTask {
     @Override
     public void run() {
         SQLiteDatabase db = sqlManager.getWritableDatabase();
-        String[] projection = {
-                UserContract.UserEntry.COLUMN_NAME_STUDENT_NAME,
-                UserContract.UserEntry.COLUMN_NAME_STUDENT_ID,
-                UserContract.UserEntry.COLUMN_NAME_ADDRESS,
-                UserContract.UserEntry.COLUMN_NAME_LATITUDE,
-                UserContract.UserEntry.COLUMN_NAME_LONGITUDE,
-                UserContract.UserEntry.COLUMN_NAME_PHONE
-            };
-        Cursor cursor = db.query(UserContract.UserEntry.TABLE_NAME, projection, null, null, null, null, null);
+        String currentTimestamp = getCurrentTimestamp();
+        String whereClause = UserContract.UserEntry.COLUMN_NAME_TIMESTAMP + " <= ?";
+        String[] whereArgs = { currentTimestamp };
+        Cursor cursor = db.query(UserContract.UserEntry.TABLE_NAME, null, whereClause, whereArgs, null, null, null, String.valueOf(1000));
+
         List<Student> students = new ArrayList<>();
+        StringBuilder rowIds = new StringBuilder("(");
         while (cursor.moveToNext()) {
             students.add(new Student(
                     cursor.getString(cursor.getColumnIndexOrThrow(UserContract.UserEntry.COLUMN_NAME_STUDENT_NAME)),
@@ -44,13 +41,16 @@ public class PostTask extends TimerTask {
                     cursor.getDouble(cursor.getColumnIndexOrThrow(UserContract.UserEntry.COLUMN_NAME_LATITUDE)),
                     cursor.getDouble(cursor.getColumnIndexOrThrow(UserContract.UserEntry.COLUMN_NAME_LONGITUDE)),
                     cursor.getString(cursor.getColumnIndexOrThrow(UserContract.UserEntry.COLUMN_NAME_PHONE)),
-                    null
+                    null,
+                    currentTimestamp
             ));
+            rowIds.append(cursor.getInt(0)).append(",");
         }
         cursor.close();
+        rowIds.deleteCharAt(rowIds.length() - 1).append(")");
+        String rowsToDelete = rowIds.toString();
 
-        String timeAtPost = getCurrentTimestamp();
-        System.out.println("Posting " + students.size() + " records to API endpoint at " + timeAtPost);
+        System.out.println("Posting " + students.size() + " records to API endpoint at " + currentTimestamp);
         ApiService apiService = ApiClient.createService(Properties.USERNAME, Properties.PASSWORD);
         Call<Void> call = apiService.postData(students);
 
@@ -60,8 +60,8 @@ public class PostTask extends TimerTask {
                 System.out.println("Successfully posted " + students.size() + " records to API endpoint at " + getCurrentTimestamp());
 
                 // clear cache if data is successfully posted
-                String whereClause = UserContract.UserEntry.COLUMN_NAME_TIMESTAMP + " <= ?";
-                String[] whereArgs = { timeAtPost };
+                String whereClause = "_id IN " + rowsToDelete;
+                String[] whereArgs = {};
                 int deletedRows = db.delete(UserContract.UserEntry.TABLE_NAME, whereClause, whereArgs);
                 System.out.println("Successfully deleted " + deletedRows + " rows.");
             }

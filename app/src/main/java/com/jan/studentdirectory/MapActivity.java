@@ -163,7 +163,7 @@ public class MapActivity extends TabHandler implements OnMapReadyCallback {
             for (int i = 0; i < names.length; i++) {
                 LatLng coordinates = new LatLng(latitudes[i], longitudes[i]);
                 Marker marker = map.addMarker(new MarkerOptions().position(coordinates));
-                markerStudentMap.put(marker, new Student(names[i], ids[i], addresses[i], latitudes[i], longitudes[i], phones[i], images[i]));
+                markerStudentMap.put(marker, new Student(names[i], ids[i], addresses[i], latitudes[i], longitudes[i], phones[i], images[i], null));
                 ImageView imageView = new ImageView(this);
                 String credential = Credentials.basic(Properties.USERNAME, Properties.PASSWORD);
                 OkHttpClient okHttpClient = new OkHttpClient.Builder()
