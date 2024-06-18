@@ -3,6 +3,7 @@ package com.jan.studentdirectory.cache;
 import android.content.ContentValues;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.jan.studentdirectory.Logger;
 import com.jan.studentdirectory.Student;
 
 import java.text.SimpleDateFormat;
@@ -15,18 +16,20 @@ public class CacheTask extends TimerTask {
 
     private final SQLiteManager sqlManager;
     private final List<Student> students;
+    private final Logger logger;
     public CacheTask(SQLiteManager sqlManager, List<Student> students) {
         this.sqlManager = sqlManager;
         this.students = students;
+        this.logger = Logger.getLogger();
     }
     @Override
     public void run() {
-        System.out.println("caching user data...");
+        logger.logCacheProcessBeginning();
         SQLiteDatabase db = sqlManager.getWritableDatabase();
         for (Student student : students) {
             ContentValues values = getContentValues(student);
             long newRowId = db.insert(UserContract.UserEntry.TABLE_NAME, null, values);
-            System.out.println("New row created. ID: " + newRowId);
+            logger.logRecordAddedToCache(newRowId);
         }
     }
 

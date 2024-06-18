@@ -15,6 +15,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.jan.studentdirectory.Logger;
 import com.jan.studentdirectory.http.ApiClient;
 import com.jan.studentdirectory.http.ApiService;
 import com.jan.studentdirectory.cache.CacheManager;
@@ -33,6 +34,7 @@ import retrofit2.Response;
 public class MainActivity extends TabHandler {
 
     List<Student> students = new ArrayList<>();
+    Logger logger = Logger.getLogger();
 
     private void populateStudents() {
         ApiService apiService = ApiClient.createService(Properties.USERNAME, Properties.PASSWORD);
@@ -42,6 +44,7 @@ public class MainActivity extends TabHandler {
             @Override
             public void onResponse(@NonNull Call<List<Student>> call, @NonNull Response<List<Student>> response) {
                 if (response.isSuccessful() && response.body() != null) {
+                    logger.logSuccessfulFetch();
                     students.clear();
                     students.addAll(response.body());
                     createTable();
@@ -53,7 +56,7 @@ public class MainActivity extends TabHandler {
 
             @Override
             public void onFailure(@NonNull Call<List<Student>> call, @NonNull Throwable throwable) {
-                System.out.println(throwable.getMessage());
+                logger.logUnsuccessfulFetch(throwable.getMessage());
                 Toast.makeText(MainActivity.this, "Request failed", Toast.LENGTH_SHORT).show();
             }
         });

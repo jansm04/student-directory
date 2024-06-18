@@ -5,6 +5,7 @@ import android.database.sqlite.SQLiteDatabase;
 
 import androidx.annotation.NonNull;
 
+import com.jan.studentdirectory.Logger;
 import com.jan.studentdirectory.Properties;
 import com.jan.studentdirectory.Student;
 import com.jan.studentdirectory.http.ApiClient;
@@ -24,9 +25,11 @@ import retrofit2.Response;
 public class ClearTask extends TimerTask {
 
     private final SQLiteManager sqlManager;
+    private final Logger logger;
 
     public ClearTask(SQLiteManager sqlManager) {
         this.sqlManager = sqlManager;
+        this.logger = Logger.getLogger();
     }
     @Override
     public void run() {
@@ -55,25 +58,25 @@ public class ClearTask extends TimerTask {
         rowIds.deleteCharAt(rowIds.length() - 1).append(")");
         String rowsToDelete = rowIds.toString();
 
-        System.out.println("Posting " + students.size() + " records to API endpoint at " + currentTimestamp);
+        logger.logPostProcessBeginning(students.size(), currentTimestamp);
         ApiService apiService = ApiClient.createService(Properties.USERNAME, Properties.PASSWORD);
         Call<Void> call = apiService.postStudents(students);
 
         call.enqueue(new Callback<Void>() {
             @Override
             public void onResponse(@NonNull Call<Void> call, @NonNull Response<Void> response) {
-                System.out.println("Successfully posted " + students.size() + " records to API endpoint at " + getCurrentTimestamp());
+                logger.logSuccessfulPost(students.size(), getCurrentTimestamp());
 
                 // clear cache if data is successfully posted
                 String whereClause = "_id IN " + rowsToDelete;
                 String[] whereArgs = {};
                 int deletedRows = db.delete(UserContract.UserEntry.TABLE_NAME, whereClause, whereArgs);
-                System.out.println("Successfully deleted " + deletedRows + " rows.");
+                logger.logSuccessfulCacheClear(deletedRows);
             }
 
             @Override
             public void onFailure(@NonNull Call<Void> call, @NonNull Throwable throwable) {
-                System.out.println("An error occurred trying to post the data. As a result, the cache was not yet cleared.");
+                logger.logUnsuccessfulPost();
             }
         });
     }

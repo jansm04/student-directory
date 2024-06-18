@@ -12,6 +12,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.jan.studentdirectory.Logger;
 import com.jan.studentdirectory.Properties;
 import com.jan.studentdirectory.R;
 import com.jan.studentdirectory.Student;
@@ -55,6 +56,7 @@ public class MapActivity extends TabHandler implements OnMapReadyCallback {
 
     private static final String MAPVIEW_BUNDLE_KEY = "MapViewBundleKey";
     int PERMISSION_ID = 44;
+    Logger logger = Logger.getLogger();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,9 +90,9 @@ public class MapActivity extends TabHandler implements OnMapReadyCallback {
                 fusedLocationProviderClient.getLastLocation().addOnCompleteListener(task -> {
                     Location location = task.getResult();
                     if (location == null) {
-                        System.out.println("Error: null location.");
+                        logger.logNullLocation();
                     } else {
-                        System.out.println("Location: " + location.getLatitude() + ", " + location.getLongitude());
+                        logger.logSuccessfulLocation(location.getLatitude(), location.getLongitude());
                         setMarker(location);
                     }
                 });
@@ -122,7 +124,6 @@ public class MapActivity extends TabHandler implements OnMapReadyCallback {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == 44) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                System.out.println("Permission granted.");
                 getLastLocation();
             } else {
                 Toast.makeText(this, "Permission denied.", Toast.LENGTH_SHORT).show();
@@ -195,7 +196,7 @@ public class MapActivity extends TabHandler implements OnMapReadyCallback {
 
                     @Override
                     public void onError(Exception e) {
-                        System.out.println("Failed to fetch image from URL.");
+                        logger.logUnsuccessfulImageLoad();
                     }
                 });
             }
