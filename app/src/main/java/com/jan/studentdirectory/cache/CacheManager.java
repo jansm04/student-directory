@@ -9,19 +9,29 @@ public class CacheManager {
 
     private final SQLiteManager sqlManager;
     private final List<Student> students;
+    private final Timer cacheTimer;
+    private final Timer clearTimer;
 
     public CacheManager(SQLiteManager sqlManager, List<Student> students) {
         this.sqlManager = sqlManager;
         this.students = students;
+        this.cacheTimer = new Timer();
+        this.clearTimer = new Timer();
     }
 
     public void startCachingInterval(int seconds) {
-        Timer timer = new Timer();
-        timer.schedule(new CacheTask(sqlManager, students), 0, seconds * 1000L);
+        cacheTimer.schedule(new CacheTask(sqlManager, students), 0, seconds * 1000L);
     }
 
     public void startClearingInterval(int seconds) {
-        Timer timer = new Timer();
-        timer.schedule(new ClearTask(sqlManager), 1000, seconds * 1000L);
+        clearTimer.schedule(new ClearTask(sqlManager), 1000, seconds * 1000L);
+    }
+
+    public void stopCachingInterval() {
+        cacheTimer.cancel();
+    }
+
+    public void stopClearingInterval() {
+        clearTimer.cancel();
     }
 }

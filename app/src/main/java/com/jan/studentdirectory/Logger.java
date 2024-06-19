@@ -47,7 +47,7 @@ public class Logger {
         Log.e("Error", "An error occurred trying to post the data. As a result, the cache was not yet cleared.");
     }
 
-    public void logUnsuccessfulFetch(String errorMessage) {
+    public void logErrorMessage(String errorMessage) {
         Log.e("Error", errorMessage);
     }
 

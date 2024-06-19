@@ -99,8 +99,6 @@ public class DetailsActivity extends TabHandler {
         Picasso picasso = new Picasso.Builder(this)
                 .downloader(new OkHttp3Downloader(okHttpClient))
                 .build();
-
-        System.out.println(imageUrl);
         picasso.load(imageUrl).into(imageView);
     }
 

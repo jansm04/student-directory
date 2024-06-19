@@ -24,7 +24,7 @@ public class SQLiteManager extends SQLiteOpenHelper {
             db.execSQL(SQLiteHelper.SQL_CREATE_ENTRIES);
             logger.logSuccessfulTableCreation();
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            logger.logErrorMessage(e.getMessage());
         }
     }
 
@@ -36,7 +36,7 @@ public class SQLiteManager extends SQLiteOpenHelper {
                 onCreate(db);
                 logger.logSuccessfulDatabaseUpgrade();
             } catch (SQLException e) {
-                System.out.println(e.getMessage());
+                logger.logErrorMessage(e.getMessage());
             }
         }
     }

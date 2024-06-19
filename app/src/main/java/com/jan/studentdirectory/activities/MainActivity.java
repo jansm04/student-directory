@@ -3,6 +3,7 @@ package com.jan.studentdirectory.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -35,6 +36,8 @@ public class MainActivity extends TabHandler {
 
     List<Student> students = new ArrayList<>();
     Logger logger = Logger.getLogger();
+    CacheManager cacheManager;
+    boolean isTracking = false;
 
     private void populateStudents() {
         ApiService apiService = ApiClient.createService(Properties.USERNAME, Properties.PASSWORD);
@@ -56,7 +59,7 @@ public class MainActivity extends TabHandler {
 
             @Override
             public void onFailure(@NonNull Call<List<Student>> call, @NonNull Throwable throwable) {
-                logger.logUnsuccessfulFetch(throwable.getMessage());
+                logger.logErrorMessage(throwable.getMessage());
                 Toast.makeText(MainActivity.this, "Request failed", Toast.LENGTH_SHORT).show();
             }
         });
@@ -110,13 +113,17 @@ public class MainActivity extends TabHandler {
 
     private void createCacheManager() {
         SQLiteManager sqlManager = new SQLiteManager(getApplicationContext());
-        CacheManager cacheManager = new CacheManager(sqlManager, students);
+        cacheManager = new CacheManager(sqlManager, students);
+    }
 
-        // add data to cache every 15 seconds
+    private void startCacheIntervals() {
         cacheManager.startCachingInterval(5);
-
-        // try to send data to api endpoint and clear cache every 60 seconds
         cacheManager.startClearingInterval(20);
+    }
+
+    private void stopCacheIntervals() {
+        cacheManager.stopCachingInterval();
+        cacheManager.stopClearingInterval();
     }
 
     @NonNull
@@ -174,5 +181,17 @@ public class MainActivity extends TabHandler {
         intent.putExtra("phones", phones);
         intent.putExtra("images", images);
         startActivity(intent);
+    }
+
+    public void handleTrackButton(View view) {
+        Button button = findViewById(R.id.track_button);
+        if (!isTracking) {
+            startCacheIntervals();
+            button.setText(R.string.stop_tracking);
+        } else {
+            stopCacheIntervals();
+            button.setText(R.string.start_tracking);
+        }
+        isTracking = !isTracking;
     }
 }

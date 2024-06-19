@@ -8,6 +8,18 @@
     tools:context=".activities.MainActivity">
     <!-- res/layout/main_activity.xml -->
 
+    <Button
+        android:id="@+id/track_button"
+        android:layout_width="153dp"
+        android:layout_height="53dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="8dp"
+        android:onClick="handleTrackButton"
+        android:text="@string/start_tracking"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -17,6 +29,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@id/bottom_navigation">
+
 
         <TableLayout
             android:id="@+id/table"
