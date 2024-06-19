@@ -17,8 +17,8 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.jan.studentdirectory.Logger;
-import com.jan.studentdirectory.http.ApiClient;
-import com.jan.studentdirectory.http.ApiService;
+import com.jan.studentdirectory.https.ApiClient;
+import com.jan.studentdirectory.https.ApiService;
 import com.jan.studentdirectory.cache.CacheManager;
 import com.jan.studentdirectory.Properties;
 import com.jan.studentdirectory.R;

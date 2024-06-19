@@ -1,4 +1,4 @@
-package com.jan.studentdirectory.http;
+package com.jan.studentdirectory.https;
 
 import android.text.TextUtils;
 

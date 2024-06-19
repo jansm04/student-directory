@@ -8,8 +8,8 @@ import androidx.annotation.NonNull;
 import com.jan.studentdirectory.Logger;
 import com.jan.studentdirectory.Properties;
 import com.jan.studentdirectory.Student;
-import com.jan.studentdirectory.http.ApiClient;
-import com.jan.studentdirectory.http.ApiService;
+import com.jan.studentdirectory.https.ApiClient;
+import com.jan.studentdirectory.https.ApiService;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
