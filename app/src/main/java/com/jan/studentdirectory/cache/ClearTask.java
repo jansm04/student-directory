@@ -58,25 +58,26 @@ public class ClearTask extends TimerTask {
         rowIds.deleteCharAt(rowIds.length() - 1).append(")");
         String rowsToDelete = rowIds.toString();
 
-        logger.logPostProcessBeginning(students.size(), currentTimestamp);
+        int size = students.size();
+        logger.logInfoMessage("Posting " + size + " records to API endpoint at " + currentTimestamp);
         ApiService apiService = ApiClient.createService(Properties.USERNAME, Properties.PASSWORD);
         Call<Void> call = apiService.postStudents(students);
 
         call.enqueue(new Callback<Void>() {
             @Override
             public void onResponse(@NonNull Call<Void> call, @NonNull Response<Void> response) {
-                logger.logSuccessfulPost(students.size(), getCurrentTimestamp());
+                logger.logInfoMessage("Successfully posted " + size + " records to API endpoint at " + currentTimestamp);
 
                 // clear cache if data is successfully posted
                 String whereClause = "_id IN " + rowsToDelete;
                 String[] whereArgs = {};
                 int deletedRows = db.delete(UserContract.UserEntry.TABLE_NAME, whereClause, whereArgs);
-                logger.logSuccessfulCacheClear(deletedRows);
+                logger.logInfoMessage("Successfully deleted " + deletedRows + " rows.");
             }
 
             @Override
             public void onFailure(@NonNull Call<Void> call, @NonNull Throwable throwable) {
-                logger.logUnsuccessfulPost();
+                logger.logErrorMessage("An error occurred trying to post the data. As a result, the cache was not yet cleared.");
             }
         });
     }

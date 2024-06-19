@@ -24,12 +24,12 @@ public class CacheTask extends TimerTask {
     }
     @Override
     public void run() {
-        logger.logCacheProcessBeginning();
+        logger.logInfoMessage("Caching user data...");
         SQLiteDatabase db = sqlManager.getWritableDatabase();
         for (Student student : students) {
             ContentValues values = getContentValues(student);
             long newRowId = db.insert(UserContract.UserEntry.TABLE_NAME, null, values);
-            logger.logRecordAddedToCache(newRowId);
+            logger.logInfoMessage("New row created. ID: " + newRowId);
         }
     }
 

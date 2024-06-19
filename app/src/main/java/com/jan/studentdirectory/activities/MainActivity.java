@@ -17,6 +17,7 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.jan.studentdirectory.Logger;
+import com.jan.studentdirectory.exceptions.UnsuccessfulFetchException;
 import com.jan.studentdirectory.http.ApiClient;
 import com.jan.studentdirectory.http.ApiService;
 import com.jan.studentdirectory.cache.CacheManager;
@@ -47,7 +48,7 @@ public class MainActivity extends TabHandler {
             @Override
             public void onResponse(@NonNull Call<List<Student>> call, @NonNull Response<List<Student>> response) {
                 if (response.isSuccessful() && response.body() != null) {
-                    logger.logSuccessfulFetch();
+                    logger.logInfoMessage("Successfully fetched student data.");
                     students.clear();
                     students.addAll(response.body());
                     createTable();

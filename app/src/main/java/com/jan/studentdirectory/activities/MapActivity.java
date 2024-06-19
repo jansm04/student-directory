@@ -90,9 +90,9 @@ public class MapActivity extends TabHandler implements OnMapReadyCallback {
                 fusedLocationProviderClient.getLastLocation().addOnCompleteListener(task -> {
                     Location location = task.getResult();
                     if (location == null) {
-                        logger.logNullLocation();
+                        logger.logErrorMessage("Null location.");
                     } else {
-                        logger.logSuccessfulLocation(location.getLatitude(), location.getLongitude());
+                        logger.logInfoMessage("Location: " + location.getLatitude() + ", " + location.getLongitude());
                         setMarker(location);
                     }
                 });
@@ -196,7 +196,7 @@ public class MapActivity extends TabHandler implements OnMapReadyCallback {
 
                     @Override
                     public void onError(Exception e) {
-                        logger.logUnsuccessfulImageLoad();
+                        logger.logErrorMessage("Failed to fetch image from URL.");
                     }
                 });
             }
