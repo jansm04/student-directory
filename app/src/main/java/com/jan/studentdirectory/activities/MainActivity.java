@@ -121,13 +121,9 @@ public class MainActivity extends TabHandler {
         cacheManager = new CacheManager(sqlManager, students);
     }
 
-    private void startCacheIntervals() {
-        try {
-            cacheManager.startCachingInterval(5);
-            cacheManager.startClearingInterval(20);
-        } catch (InvalidTimeException e) {
-            e.logErrorMessage();
-        }
+    private void startCacheIntervals() throws InvalidTimeException {
+        cacheManager.startCachingInterval(5);
+        cacheManager.startClearingInterval(20);
     }
 
     private void stopCacheIntervals() {
@@ -195,12 +191,17 @@ public class MainActivity extends TabHandler {
     public void handleTrackButton(View view) {
         Button button = findViewById(R.id.track_button);
         if (!isTracking) {
-            startCacheIntervals();
-            button.setText(R.string.stop_tracking);
+            try {
+                startCacheIntervals();
+                button.setText(R.string.stop_tracking);
+                isTracking = true;
+            } catch (InvalidTimeException e) {
+                e.logErrorMessage();
+            }
         } else {
             stopCacheIntervals();
             button.setText(R.string.start_tracking);
+            isTracking = false;
         }
-        isTracking = !isTracking;
     }
 }
