@@ -1,6 +1,7 @@
 package com.jan.studentdirectory.cache;
 
 import com.jan.studentdirectory.Student;
+import com.jan.studentdirectory.exceptions.InvalidTimeException;
 
 import java.util.List;
 import java.util.Timer;
@@ -19,12 +20,20 @@ public class CacheManager {
         this.clearTimer = new Timer();
     }
 
-    public void startCachingInterval(int seconds) {
-        cacheTimer.schedule(new CacheTask(sqlManager, students), 0, seconds * 1000L);
+    public void startCachingInterval(long seconds) throws InvalidTimeException {
+        if (seconds < 0) {
+            throw new InvalidTimeException("Caching interval must be a non-negative integer.");
+        }
+        long milliseconds = seconds * 1000;
+        cacheTimer.schedule(new CacheTask(sqlManager, students), 0, milliseconds);
     }
 
-    public void startClearingInterval(int seconds) {
-        clearTimer.schedule(new ClearTask(sqlManager), 1000, seconds * 1000L);
+    public void startClearingInterval(long seconds) throws InvalidTimeException {
+        if (seconds < 0) {
+            throw new InvalidTimeException("Clearing interval must be a non-negative integer.");
+        }
+        long milliseconds = seconds * 1000;
+        clearTimer.schedule(new ClearTask(sqlManager), 1000, milliseconds);
     }
 
     public void stopCachingInterval() {

@@ -3,6 +3,7 @@ package com.jan.studentdirectory.https;
 import android.text.TextUtils;
 
 import com.jan.studentdirectory.Properties;
+import com.jan.studentdirectory.exceptions.InvalidCredentialsException;
 
 import okhttp3.Credentials;
 import okhttp3.OkHttpClient;
@@ -12,12 +13,15 @@ public class ApiClient {
     private static final OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
     private static ApiService apiService;
 
-    public static ApiService createService(String username, String password) {
-        if (!TextUtils.isEmpty(username) && !TextUtils.isEmpty(password)) {
-            String authToken = Credentials.basic(username, password);
-            return createService(authToken);
+    public static ApiService createService(String username, String password) throws InvalidCredentialsException {
+        if (TextUtils.isEmpty(username)) {
+            throw new InvalidCredentialsException("Username must not be empty.");
         }
-        return createService(null);
+        if (TextUtils.isEmpty(password)) {
+            throw new InvalidCredentialsException("Password must not be empty");
+        }
+        String authToken = Credentials.basic(username, password);
+        return createService(authToken);
     }
 
     public static ApiService createService(final String authToken) {

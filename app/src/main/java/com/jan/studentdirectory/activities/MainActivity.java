@@ -17,6 +17,8 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.jan.studentdirectory.Logger;
+import com.jan.studentdirectory.exceptions.InvalidCredentialsException;
+import com.jan.studentdirectory.exceptions.InvalidTimeException;
 import com.jan.studentdirectory.https.ApiClient;
 import com.jan.studentdirectory.https.ApiService;
 import com.jan.studentdirectory.cache.CacheManager;
@@ -40,29 +42,32 @@ public class MainActivity extends TabHandler {
     boolean isTracking = false;
 
     private void populateStudents() {
-        ApiService apiService = ApiClient.createService(Properties.USERNAME, Properties.PASSWORD);
-        Call<List<Student>> call = apiService.getStudents();
-
-        call.enqueue(new Callback<List<Student>>() {
-            @Override
-            public void onResponse(@NonNull Call<List<Student>> call, @NonNull Response<List<Student>> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    logger.logInfoMessage("Successfully fetched student data.");
-                    students.clear();
-                    students.addAll(response.body());
-                    createTable();
-                    createCacheManager();
-                } else {
-                    Toast.makeText(MainActivity.this, "Response not successful", Toast.LENGTH_SHORT).show();
+        try {
+            ApiService apiService = ApiClient.createService(Properties.USERNAME, Properties.PASSWORD);
+            Call<List<Student>> call = apiService.getStudents();
+            call.enqueue(new Callback<List<Student>>() {
+                @Override
+                public void onResponse(@NonNull Call<List<Student>> call, @NonNull Response<List<Student>> response) {
+                    if (response.isSuccessful() && response.body() != null) {
+                        logger.logInfoMessage("Successfully fetched student data.");
+                        students.clear();
+                        students.addAll(response.body());
+                        createTable();
+                        createCacheManager();
+                    } else {
+                        Toast.makeText(MainActivity.this, "Response not successful", Toast.LENGTH_SHORT).show();
+                    }
                 }
-            }
 
-            @Override
-            public void onFailure(@NonNull Call<List<Student>> call, @NonNull Throwable throwable) {
-                logger.logErrorMessage(throwable.getMessage());
-                Toast.makeText(MainActivity.this, "Request failed", Toast.LENGTH_SHORT).show();
-            }
-        });
+                @Override
+                public void onFailure(@NonNull Call<List<Student>> call, @NonNull Throwable throwable) {
+                    logger.logErrorMessage(throwable.getMessage());
+                    Toast.makeText(MainActivity.this, "Request failed", Toast.LENGTH_SHORT).show();
+                }
+            });
+        } catch (InvalidCredentialsException e) {
+            e.logErrorMessage();
+        }
     }
 
     @Override
@@ -117,8 +122,12 @@ public class MainActivity extends TabHandler {
     }
 
     private void startCacheIntervals() {
-        cacheManager.startCachingInterval(5);
-        cacheManager.startClearingInterval(20);
+        try {
+            cacheManager.startCachingInterval(5);
+            cacheManager.startClearingInterval(20);
+        } catch (InvalidTimeException e) {
+            e.logErrorMessage();
+        }
     }
 
     private void stopCacheIntervals() {
