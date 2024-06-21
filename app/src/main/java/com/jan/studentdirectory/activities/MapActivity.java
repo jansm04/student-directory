@@ -222,6 +222,10 @@ public class MapActivity extends SDActivity implements OnMapReadyCallback {
 
                     String coordinatesText = student.getLatitude() + ", " + student.getLongitude();
                     coordinates.setText(coordinatesText);
+                    if (image.getParent() != null) {
+                        ViewGroup parent = (ViewGroup) image.getParent();
+                        parent.removeView(image);
+                    }
                     view.addView(image);
                 }
                 return view;
