@@ -16,3 +16,4 @@ The app features a button to start and stop a service that 1) stores student dat
 - [OkHttp](https://square.github.io/okhttp/)
 - [Retrofit](https://square.github.io/retrofit/)
 - [Picasso](https://square.github.io/picasso/)
+- [Timber](https://jakewharton.github.io/timber/docs/5.x/index.html)
