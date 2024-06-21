@@ -13,7 +13,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.jan.studentdirectory.Properties;
 import com.jan.studentdirectory.R;
 
-public class WebActivity extends TabHandler {
+public class WebActivity extends SDActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

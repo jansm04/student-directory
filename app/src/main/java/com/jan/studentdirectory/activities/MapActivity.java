@@ -27,7 +27,6 @@ import okhttp3.Request;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
@@ -41,21 +40,20 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class MapActivity extends TabHandler implements OnMapReadyCallback {
+public class MapActivity extends SDActivity implements OnMapReadyCallback {
 
     private FusedLocationProviderClient fusedLocationProviderClient;
     private MapView mapView;
     private GoogleMap map;
     private Map<Marker, Student> markerStudentMap;
     private Map<Marker, ImageView> markerImageMap;
+    private final int REQUEST_FINE_LOCATION = 44;
 
     private static final String MAPVIEW_BUNDLE_KEY = "MapViewBundleKey";
-    int PERMISSION_ID = 44;
     Logger logger = Logger.getLogger();
 
     @Override
@@ -85,7 +83,7 @@ public class MapActivity extends TabHandler implements OnMapReadyCallback {
 
     @SuppressLint("MissingPermission")
     private void getLastLocation() {
-        if (checkPermissions()) {
+        if (checkPermissions(this, Manifest.permission.ACCESS_FINE_LOCATION)) {
             if (isLocationEnabled()) {
                 fusedLocationProviderClient.getLastLocation().addOnCompleteListener(task -> {
                     Location location = task.getResult();
@@ -102,16 +100,8 @@ public class MapActivity extends TabHandler implements OnMapReadyCallback {
                 startActivity(intent);
             }
         } else {
-            requestPermissions();
+            requestPermissions(this, Manifest.permission.ACCESS_FINE_LOCATION, REQUEST_FINE_LOCATION);
         }
-    }
-
-    private boolean checkPermissions() {
-        return ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
-    }
-
-    private void requestPermissions() {
-        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSION_ID);
     }
 
     private boolean isLocationEnabled() {
@@ -122,13 +112,7 @@ public class MapActivity extends TabHandler implements OnMapReadyCallback {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == 44) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                getLastLocation();
-            } else {
-                Toast.makeText(this, "Permission denied.", Toast.LENGTH_SHORT).show();
-            }
-        }
+        onRequestPermissionsResult(requestCode, grantResults, REQUEST_FINE_LOCATION, this::getLastLocation);
     }
 
     public void setMarker(Location location) {
@@ -191,6 +175,9 @@ public class MapActivity extends TabHandler implements OnMapReadyCallback {
                 picasso.load(imageUrl).into(imageView, new Callback() {
                     @Override
                     public void onSuccess() {
+                        imageView.setLayoutParams(new LinearLayout.LayoutParams(
+                                ViewGroup.LayoutParams.WRAP_CONTENT,
+                                ViewGroup.LayoutParams.WRAP_CONTENT));
                         markerImageMap.put(marker, imageView);
                     }
 
@@ -211,11 +198,10 @@ public class MapActivity extends TabHandler implements OnMapReadyCallback {
                 return null;
             }
 
-            @SuppressLint("SetTextI18n")
             @Override
             public View getInfoContents(@NonNull Marker marker) {
                 // Custom view for info window content
-                @SuppressLint("InflateParams") LinearLayout view = (LinearLayout) getLayoutInflater().inflate(R.layout.custom_info_window, null);
+                LinearLayout view = (LinearLayout) getLayoutInflater().inflate(R.layout.custom_info_window, null);
 
                 TextView title = view.findViewById(R.id.title);
                 TextView id = view.findViewById(R.id.id);
@@ -228,14 +214,14 @@ public class MapActivity extends TabHandler implements OnMapReadyCallback {
 
                 if (student != null && image != null) {
                     title.setText(student.getName());
-                    id.setText("ID: " + student.getStudentId());
+
+                    String idText = "ID: " + student.getStudentId();
+                    id.setText(idText);
                     address.setText(student.getAddress());
                     phone.setText(student.getPhone());
-                    coordinates.setText(student.getLatitude() + ", " + student.getLongitude());
 
-                    image.setLayoutParams(new LinearLayout.LayoutParams(
-                            ViewGroup.LayoutParams.WRAP_CONTENT,
-                            ViewGroup.LayoutParams.WRAP_CONTENT));
+                    String coordinatesText = student.getLatitude() + ", " + student.getLongitude();
+                    coordinates.setText(coordinatesText);
                     view.addView(image);
                 }
                 return view;

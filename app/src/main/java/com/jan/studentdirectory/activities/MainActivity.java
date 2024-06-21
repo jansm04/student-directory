@@ -34,7 +34,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class MainActivity extends TabHandler {
+public class MainActivity extends SDActivity {
 
     List<Student> students = new ArrayList<>();
     Logger logger = Logger.getLogger();
@@ -98,22 +98,21 @@ public class MainActivity extends TabHandler {
             row.setPadding(8, 8, 8, 8);
             row.setId(i);
 
-            // add name text view
-            TextView name = new TextView(this);
-            name.setText(student.getName());
-            row.addView(name, elementParams);
-
-            // add student ID text view
-            TextView id = new TextView(this);
-            id.setText(String.valueOf(student.getStudentId()));
-            row.addView(id, elementParams);
+            createTextView(student.getName(), row, elementParams);
+            createTextView(String.valueOf(student.getStudentId()), row, elementParams);
 
             // add details button
             Button details = getButton(student);
             row.addView(details, elementParams);
-
             table.addView(row, rowParams);
         }
+    }
+
+    private void createTextView(String text, TableRow row, TableRow.LayoutParams elementParams) {
+        // add name text view
+        TextView name = new TextView(this);
+        name.setText(text);
+        row.addView(name, elementParams);
     }
 
     private void createCacheManager() {
