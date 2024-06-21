@@ -1,6 +1,6 @@
 package com.jan.studentdirectory;
 
-import android.util.Log;
+import timber.log.Timber;
 
 public class Logger {
 
@@ -13,13 +13,13 @@ public class Logger {
         return logger;
     }
 
-    private Logger() {};
+    private Logger() {}
 
     public void logInfoMessage(String infoMessage) {
-        Log.i("Info", infoMessage);
+        Timber.tag("Info").i(infoMessage);
     }
 
     public void logErrorMessage(String errorMessage) {
-        Log.e("Error", errorMessage);
+        Timber.tag("Error").e(errorMessage);
     }
 }
