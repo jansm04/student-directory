@@ -15,6 +15,7 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.jan.studentdirectory.Properties;
 import com.jan.studentdirectory.R;
+import com.jan.studentdirectory.exceptions.PermissionDeniedException;
 import com.squareup.picasso.OkHttp3Downloader;
 import com.squareup.picasso.Picasso;
 
@@ -38,40 +39,29 @@ public class DetailsActivity extends SDActivity {
         init();
     }
 
-    public void init() {
+    private void init() {
         Intent intent = getIntent();
 
-        // view name
         String name = intent.getStringExtra("name");
         setTextView(R.id.name_var, name);
 
-        // view student ID
         int studentID = intent.getIntExtra("id", 0);
         setTextView(R.id.id_var, String.valueOf(studentID));
 
-        // view student address
         String address = intent.getStringExtra("address");
         setTextView(R.id.address_var, address);
 
-        // view student longitude
         double longitude = intent.getDoubleExtra("longitude", 0);
         setTextView(R.id.long_val, String.valueOf(longitude));
 
-        // view student latitude
         double latitude = intent.getDoubleExtra("latitude", 0);
         setTextView(R.id.lat_val, String.valueOf(latitude));
 
-        // view student phone number
-        String phone = intent.getStringExtra("phone");
-        TextView phoneText = setTextView(R.id.phone_val, phone);
-        phoneText.setOnClickListener(v -> {
-            if (!checkPermissions(this, Manifest.permission.CALL_PHONE)) {
-                requestPermissions(this, Manifest.permission.CALL_PHONE, REQUEST_PHONE_CALL);
-            } else {
-                startCall();
-            }
-        });
+        loadPhoneNumber(intent);
+        loadImage(intent);
+    }
 
+    private void loadImage(Intent intent) {
         // view image
         String imageUrl = intent.getStringExtra("image");
         ImageView imageView = findViewById(R.id.imageView);
@@ -92,6 +82,19 @@ public class DetailsActivity extends SDActivity {
         picasso.load(imageUrl).into(imageView);
     }
 
+    private void loadPhoneNumber(Intent intent) {
+        // view student phone number
+        String phone = intent.getStringExtra("phone");
+        TextView phoneText = setTextView(R.id.phone_val, phone);
+        phoneText.setOnClickListener(v -> {
+            if (!checkPermissions(this, Manifest.permission.CALL_PHONE)) {
+                requestPermissions(this, Manifest.permission.CALL_PHONE, REQUEST_PHONE_CALL);
+            } else {
+                startCall();
+            }
+        });
+    }
+
     private TextView setTextView(int id, String text) {
         TextView textView = findViewById(id);
         textView.setText(text);
@@ -101,10 +104,14 @@ public class DetailsActivity extends SDActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        onRequestPermissionsResult(requestCode, grantResults, REQUEST_PHONE_CALL, this::startCall);
+        try {
+            onRequestPermissionsResult(requestCode, grantResults, REQUEST_PHONE_CALL, this::startCall);
+        } catch (PermissionDeniedException e) {
+            e.logErrorMessage();
+        }
     }
 
-    public void startCall() {
+    private void startCall() {
         TextView phoneText = findViewById(R.id.phone_val);
         String phone = phoneText.getText().toString();
         Intent callIntent = new Intent(Intent.ACTION_CALL);

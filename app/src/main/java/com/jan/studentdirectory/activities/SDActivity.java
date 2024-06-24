@@ -13,6 +13,8 @@ import androidx.activity.OnBackPressedDispatcher;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
+import com.jan.studentdirectory.exceptions.PermissionDeniedException;
+
 public abstract class SDActivity extends AppCompatActivity {
 
     public void handleHomeButton(MenuItem item) {}
@@ -21,7 +23,7 @@ public abstract class SDActivity extends AppCompatActivity {
 
     public void handleWebButton(MenuItem item) {}
 
-    public void startActivityWithSameData(Class<?> targetActivity) {
+    protected void startActivityWithSameData(Class<?> targetActivity) {
         Intent currentIntent = getIntent();
         Intent newIntent = new Intent(this, targetActivity);
         Bundle extras = currentIntent.getExtras();
@@ -31,7 +33,7 @@ public abstract class SDActivity extends AppCompatActivity {
         startActivity(newIntent);
     }
 
-    public void moveTaskToBackgroundOnBack() {
+    protected void moveTaskToBackgroundOnBack() {
         OnBackPressedDispatcher onBackPressedDispatcher = getOnBackPressedDispatcher();
         onBackPressedDispatcher.addCallback(new OnBackPressedCallback(true) {
             @Override
@@ -49,12 +51,14 @@ public abstract class SDActivity extends AppCompatActivity {
         ActivityCompat.requestPermissions(activity, new String[]{ permission }, permissionID);
     }
 
-    protected void onRequestPermissionsResult(int requestCode, int[] grantResults, int permissionID, GrantedCallback grantedCallback) {
+    protected void onRequestPermissionsResult(int requestCode, int[] grantResults, int permissionID, GrantedCallback grantedCallback) throws PermissionDeniedException {
         if (requestCode == permissionID) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 grantedCallback.run();
             } else {
-                Toast.makeText(this, "Permission denied.", Toast.LENGTH_SHORT).show();
+                String message = "Permission denied.";
+                Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+                throw new PermissionDeniedException(message);
             }
         }
     }

@@ -16,6 +16,7 @@ import com.jan.studentdirectory.Logger;
 import com.jan.studentdirectory.Properties;
 import com.jan.studentdirectory.R;
 import com.jan.studentdirectory.Student;
+import com.jan.studentdirectory.exceptions.PermissionDeniedException;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.OkHttp3Downloader;
 import com.squareup.picasso.Picasso;
@@ -112,10 +113,14 @@ public class MapActivity extends SDActivity implements OnMapReadyCallback {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        onRequestPermissionsResult(requestCode, grantResults, REQUEST_FINE_LOCATION, this::getLastLocation);
+        try {
+            onRequestPermissionsResult(requestCode, grantResults, REQUEST_FINE_LOCATION, this::getLastLocation);
+        } catch (PermissionDeniedException e) {
+            e.logErrorMessage();
+        }
     }
 
-    public void setMarker(Location location) {
+    private void setMarker(Location location) {
         double latitude = location.getLatitude();
         double longitude = location.getLongitude();
         LatLng coordinates = new LatLng(latitude, longitude);
@@ -137,7 +142,7 @@ public class MapActivity extends SDActivity implements OnMapReadyCallback {
         mapView.onSaveInstanceState(mapViewBundle);
     }
 
-    public void getStudentLocations() {
+    private void getStudentLocations() {
         Intent intent = getIntent();
         String[] names = intent.getStringArrayExtra("names");
         int[] ids = intent.getIntArrayExtra("ids");
