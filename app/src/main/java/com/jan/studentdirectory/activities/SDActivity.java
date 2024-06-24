@@ -13,7 +13,14 @@ import androidx.activity.OnBackPressedDispatcher;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
+import com.jan.studentdirectory.Properties;
 import com.jan.studentdirectory.exceptions.PermissionDeniedException;
+import com.squareup.picasso.OkHttp3Downloader;
+import com.squareup.picasso.Picasso;
+
+import okhttp3.Credentials;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
 
 public abstract class SDActivity extends AppCompatActivity {
 
@@ -61,6 +68,23 @@ public abstract class SDActivity extends AppCompatActivity {
                 throw new PermissionDeniedException(message);
             }
         }
+    }
+
+    protected Picasso getPicassoBuild() {
+        String credential = Credentials.basic(Properties.USERNAME, Properties.PASSWORD);
+        OkHttpClient okHttpClient = new OkHttpClient.Builder()
+                .addInterceptor(chain -> {
+                    Request original = chain.request();
+                    Request.Builder requestBuilder = original.newBuilder()
+                            .header("Authorization", credential);
+                    Request request = requestBuilder.build();
+                    return chain.proceed(request);
+                })
+                .build();
+
+        return new Picasso.Builder(getApplicationContext())
+                .downloader(new OkHttp3Downloader(okHttpClient))
+                .build();
     }
 
 }

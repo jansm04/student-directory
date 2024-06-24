@@ -13,17 +13,11 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.jan.studentdirectory.Logger;
-import com.jan.studentdirectory.Properties;
 import com.jan.studentdirectory.R;
 import com.jan.studentdirectory.Student;
 import com.jan.studentdirectory.exceptions.PermissionDeniedException;
 import com.squareup.picasso.Callback;
-import com.squareup.picasso.OkHttp3Downloader;
 import com.squareup.picasso.Picasso;
-
-import okhttp3.Credentials;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -158,25 +152,13 @@ public class MapActivity extends SDActivity implements OnMapReadyCallback {
                 Marker marker = map.addMarker(new MarkerOptions().position(coordinates));
                 markerStudentMap.put(marker, new Student(names[i], ids[i], addresses[i], latitudes[i], longitudes[i], phones[i], images[i], null));
                 ImageView imageView = new ImageView(this);
-                String credential = Credentials.basic(Properties.USERNAME, Properties.PASSWORD);
-                OkHttpClient okHttpClient = new OkHttpClient.Builder()
-                        .addInterceptor(chain -> {
-                            Request original = chain.request();
-                            Request.Builder requestBuilder = original.newBuilder()
-                                    .header("Authorization", credential);
-                            Request request = requestBuilder.build();
-                            return chain.proceed(request);
-                        })
-                        .build();
 
-                Picasso picasso = new Picasso.Builder(getApplicationContext())
-                        .downloader(new OkHttp3Downloader(okHttpClient))
-                        .build();
-
-                String imageUrl = images[i];
+                // initialize picasso
+                Picasso picasso = getPicassoBuild();
                 picasso.setIndicatorsEnabled(true);
                 picasso.setLoggingEnabled(true);
 
+                String imageUrl = images[i];
                 picasso.load(imageUrl).into(imageView, new Callback() {
                     @Override
                     public void onSuccess() {

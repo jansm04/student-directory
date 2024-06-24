@@ -13,15 +13,10 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-import com.jan.studentdirectory.Properties;
 import com.jan.studentdirectory.R;
 import com.jan.studentdirectory.exceptions.PermissionDeniedException;
-import com.squareup.picasso.OkHttp3Downloader;
 import com.squareup.picasso.Picasso;
 
-import okhttp3.Credentials;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
 
 public class DetailsActivity extends SDActivity {
 
@@ -65,20 +60,7 @@ public class DetailsActivity extends SDActivity {
         // view image
         String imageUrl = intent.getStringExtra("image");
         ImageView imageView = findViewById(R.id.imageView);
-        String credential = Credentials.basic(Properties.USERNAME, Properties.PASSWORD);
-        OkHttpClient okHttpClient = new OkHttpClient.Builder()
-                .addInterceptor(chain -> {
-                    Request original = chain.request();
-                    Request.Builder requestBuilder = original.newBuilder()
-                            .header("Authorization", credential);
-                    Request request = requestBuilder.build();
-                    return chain.proceed(request);
-                })
-                .build();
-
-        Picasso picasso = new Picasso.Builder(this)
-                .downloader(new OkHttp3Downloader(okHttpClient))
-                .build();
+        Picasso picasso = getPicassoBuild();
         picasso.load(imageUrl).into(imageView);
     }
 
