@@ -12,7 +12,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.jan.studentdirectory.Logger;
+import com.jan.studentdirectory.Logman;
 import com.jan.studentdirectory.R;
 import com.jan.studentdirectory.Student;
 import com.jan.studentdirectory.exceptions.PermissionDeniedException;
@@ -49,7 +49,7 @@ public class MapActivity extends SDActivity implements OnMapReadyCallback {
     private final int REQUEST_FINE_LOCATION = 44;
 
     private static final String MAPVIEW_BUNDLE_KEY = "MapViewBundleKey";
-    Logger logger = Logger.getLogger();
+    Logman logman = Logman.getLogman();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,9 +83,9 @@ public class MapActivity extends SDActivity implements OnMapReadyCallback {
                 fusedLocationProviderClient.getLastLocation().addOnCompleteListener(task -> {
                     Location location = task.getResult();
                     if (location == null) {
-                        logger.logErrorMessage("Null location.");
+                        logman.logErrorMessage("Null location.");
                     } else {
-                        logger.logInfoMessage("Location: " + location.getLatitude() + ", " + location.getLongitude());
+                        logman.logInfoMessage("Location: " + location.getLatitude() + ", " + location.getLongitude());
                         setMarker(location);
                     }
                 });
@@ -170,7 +170,7 @@ public class MapActivity extends SDActivity implements OnMapReadyCallback {
 
                     @Override
                     public void onError(Exception e) {
-                        logger.logErrorMessage("Failed to fetch image from URL.");
+                        logman.logErrorMessage("Failed to fetch image from URL.");
                     }
                 });
             }

@@ -16,7 +16,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.jan.studentdirectory.Logger;
+import com.jan.studentdirectory.Logman;
 import com.jan.studentdirectory.exceptions.InvalidCredentialsException;
 import com.jan.studentdirectory.exceptions.InvalidTimeException;
 import com.jan.studentdirectory.https.ApiClient;
@@ -27,8 +27,14 @@ import com.jan.studentdirectory.R;
 import com.jan.studentdirectory.cache.SQLiteManager;
 import com.jan.studentdirectory.Student;
 
+import org.tinylog.Logger;
+
+import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -37,7 +43,7 @@ import retrofit2.Response;
 public class MainActivity extends SDActivity {
 
     List<Student> students = new ArrayList<>();
-    Logger logger = Logger.getLogger();
+    Logman logman = Logman.getLogman();
     CacheManager cacheManager;
     boolean isTracking = false;
 
@@ -49,7 +55,7 @@ public class MainActivity extends SDActivity {
                 @Override
                 public void onResponse(@NonNull Call<List<Student>> call, @NonNull Response<List<Student>> response) {
                     if (response.isSuccessful() && response.body() != null) {
-                        logger.logInfoMessage("Successfully fetched student data.");
+                        logman.logInfoMessage("Successfully fetched student data.");
                         students.clear();
                         students.addAll(response.body());
                         createTable();
@@ -61,7 +67,7 @@ public class MainActivity extends SDActivity {
 
                 @Override
                 public void onFailure(@NonNull Call<List<Student>> call, @NonNull Throwable throwable) {
-                    logger.logErrorMessage(throwable.getMessage());
+                    logman.logErrorMessage(throwable.getMessage());
                     Toast.makeText(MainActivity.this, "Request failed", Toast.LENGTH_SHORT).show();
                 }
             });
@@ -79,6 +85,16 @@ public class MainActivity extends SDActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+        File directoryForLogs = getExternalFilesDir(null);
+        if (directoryForLogs != null) {
+            System.setProperty("tinylog.directory", directoryForLogs.getAbsolutePath());
+
+            Logger.info("Process started at {}", getCurrentTimestamp());
+            Logger.info("Logs can be found in \"{}\"", directoryForLogs);
+        } else {
+            Logger.error("Null directory for logs.");
+        }
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
         bottomNavigationView.getMenu().getItem(0).setChecked(true);
@@ -202,5 +218,10 @@ public class MainActivity extends SDActivity {
             button.setText(R.string.start_tracking);
             isTracking = false;
         }
+    }
+
+    private String getCurrentTimestamp() {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+        return sdf.format(new Date());
     }
 }

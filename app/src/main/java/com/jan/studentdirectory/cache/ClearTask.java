@@ -5,7 +5,7 @@ import android.database.sqlite.SQLiteDatabase;
 
 import androidx.annotation.NonNull;
 
-import com.jan.studentdirectory.Logger;
+import com.jan.studentdirectory.Logman;
 import com.jan.studentdirectory.Properties;
 import com.jan.studentdirectory.Student;
 import com.jan.studentdirectory.exceptions.InvalidCredentialsException;
@@ -26,11 +26,11 @@ import retrofit2.Response;
 public class ClearTask extends TimerTask {
 
     private final SQLiteManager sqlManager;
-    private final Logger logger;
+    private final Logman logman;
 
     public ClearTask(SQLiteManager sqlManager) {
         this.sqlManager = sqlManager;
-        this.logger = Logger.getLogger();
+        this.logman = Logman.getLogman();
     }
     @Override
     public void run() {
@@ -60,7 +60,7 @@ public class ClearTask extends TimerTask {
         String rowsToDelete = rowIds.toString();
 
         int size = students.size();
-        logger.logInfoMessage("Posting " + size + " records to API endpoint at " + currentTimestamp);
+        logman.logInfoMessage("Posting " + size + " records to API endpoint at " + currentTimestamp);
 
         try {
             ApiService apiService = ApiClient.createService(Properties.USERNAME, Properties.PASSWORD);
@@ -68,18 +68,18 @@ public class ClearTask extends TimerTask {
             call.enqueue(new Callback<Void>() {
                 @Override
                 public void onResponse(@NonNull Call<Void> call, @NonNull Response<Void> response) {
-                    logger.logInfoMessage("Successfully posted " + size + " records to API endpoint at " + currentTimestamp);
+                    logman.logInfoMessage("Successfully posted " + size + " records to API endpoint at " + currentTimestamp);
 
                     // clear cache if data is successfully posted
                     String whereClause = "_id IN " + rowsToDelete;
                     String[] whereArgs = {};
                     int deletedRows = db.delete(UserContract.UserEntry.TABLE_NAME, whereClause, whereArgs);
-                    logger.logInfoMessage("Successfully deleted " + deletedRows + " rows.");
+                    logman.logInfoMessage("Successfully deleted " + deletedRows + " rows.");
                 }
 
                 @Override
                 public void onFailure(@NonNull Call<Void> call, @NonNull Throwable throwable) {
-                    logger.logErrorMessage("An error occurred trying to post the data. As a result, the cache was not yet cleared.");
+                    logman.logErrorMessage("An error occurred trying to post the data. As a result, the cache was not yet cleared.");
                 }
             });
         } catch (InvalidCredentialsException e) {
