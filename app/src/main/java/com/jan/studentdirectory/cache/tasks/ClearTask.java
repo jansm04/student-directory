@@ -1,22 +1,22 @@
-package com.jan.studentdirectory.cache;
+package com.jan.studentdirectory.cache.tasks;
 
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import androidx.annotation.NonNull;
 
-import com.jan.studentdirectory.Logman;
-import com.jan.studentdirectory.Properties;
-import com.jan.studentdirectory.Student;
+import com.jan.studentdirectory.cache.sqlite.SQLiteManager;
+import com.jan.studentdirectory.cache.sqlite.UserContract;
+import com.jan.studentdirectory.util.Logman;
+import com.jan.studentdirectory.properties.Properties;
+import com.jan.studentdirectory.model.Student;
+import com.jan.studentdirectory.util.Timeman;
 import com.jan.studentdirectory.exceptions.InvalidCredentialsException;
 import com.jan.studentdirectory.https.ApiClient;
 import com.jan.studentdirectory.https.ApiService;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 import java.util.TimerTask;
 
 import retrofit2.Call;
@@ -35,7 +35,7 @@ public class ClearTask extends TimerTask {
     @Override
     public void run() {
         SQLiteDatabase db = sqlManager.getWritableDatabase();
-        String currentTimestamp = getCurrentTimestamp();
+        String currentTimestamp = Timeman.getCurrentTimestamp();
         String whereClause = UserContract.UserEntry.COLUMN_NAME_TIMESTAMP + " <= ?";
         String[] whereArgs = { currentTimestamp };
         Cursor cursor = db.query(UserContract.UserEntry.TABLE_NAME, null, whereClause, whereArgs, null, null, null, String.valueOf(1000));
@@ -85,10 +85,5 @@ public class ClearTask extends TimerTask {
         } catch (InvalidCredentialsException e) {
             e.logErrorMessage();
         }
-    }
-
-    private String getCurrentTimestamp() {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
-        return sdf.format(new Date());
     }
 }

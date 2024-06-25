@@ -1,15 +1,15 @@
-package com.jan.studentdirectory.cache;
+package com.jan.studentdirectory.cache.tasks;
 
 import android.content.ContentValues;
 import android.database.sqlite.SQLiteDatabase;
 
-import com.jan.studentdirectory.Logman;
-import com.jan.studentdirectory.Student;
+import com.jan.studentdirectory.cache.sqlite.SQLiteManager;
+import com.jan.studentdirectory.cache.sqlite.UserContract;
+import com.jan.studentdirectory.util.Logman;
+import com.jan.studentdirectory.model.Student;
+import com.jan.studentdirectory.util.Timeman;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 import java.util.TimerTask;
 
 public class CacheTask extends TimerTask {
@@ -41,12 +41,7 @@ public class CacheTask extends TimerTask {
         values.put(UserContract.UserEntry.COLUMN_NAME_LATITUDE, student.getLatitude());
         values.put(UserContract.UserEntry.COLUMN_NAME_LONGITUDE, student.getLongitude());
         values.put(UserContract.UserEntry.COLUMN_NAME_PHONE, student.getPhone());
-        values.put(UserContract.UserEntry.COLUMN_NAME_TIMESTAMP, getCurrentTimestamp());
+        values.put(UserContract.UserEntry.COLUMN_NAME_TIMESTAMP, Timeman.getCurrentTimestamp());
         return values;
-    }
-
-    private String getCurrentTimestamp() {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
-        return sdf.format(new Date());
     }
 }

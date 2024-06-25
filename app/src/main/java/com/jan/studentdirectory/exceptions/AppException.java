@@ -1,6 +1,6 @@
 package com.jan.studentdirectory.exceptions;
 
-import com.jan.studentdirectory.Logman;
+import com.jan.studentdirectory.util.Logman;
 
 public class AppException extends Exception {
 

@@ -16,25 +16,23 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.jan.studentdirectory.Logman;
+import com.jan.studentdirectory.util.Logman;
+import com.jan.studentdirectory.util.Timeman;
 import com.jan.studentdirectory.exceptions.InvalidCredentialsException;
 import com.jan.studentdirectory.exceptions.InvalidTimeException;
 import com.jan.studentdirectory.https.ApiClient;
 import com.jan.studentdirectory.https.ApiService;
 import com.jan.studentdirectory.cache.CacheManager;
-import com.jan.studentdirectory.Properties;
+import com.jan.studentdirectory.properties.Properties;
 import com.jan.studentdirectory.R;
-import com.jan.studentdirectory.cache.SQLiteManager;
-import com.jan.studentdirectory.Student;
+import com.jan.studentdirectory.cache.sqlite.SQLiteManager;
+import com.jan.studentdirectory.model.Student;
 
 import org.tinylog.Logger;
 
 import java.io.File;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -90,7 +88,7 @@ public class MainActivity extends SDActivity {
         if (directoryForLogs != null) {
             System.setProperty("tinylog.directory", directoryForLogs.getAbsolutePath());
 
-            Logger.info("Process started at {}", getCurrentTimestamp());
+            Logger.info("Process started at {}", Timeman.getCurrentTimestamp());
             Logger.info("Logs can be found in \"{}\"", directoryForLogs);
         } else {
             Logger.error("Null directory for logs.");
@@ -218,10 +216,5 @@ public class MainActivity extends SDActivity {
             button.setText(R.string.start_tracking);
             isTracking = false;
         }
-    }
-
-    private String getCurrentTimestamp() {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
-        return sdf.format(new Date());
     }
 }

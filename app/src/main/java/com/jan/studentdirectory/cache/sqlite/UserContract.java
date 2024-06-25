@@ -1,4 +1,4 @@
-package com.jan.studentdirectory.cache;
+package com.jan.studentdirectory.cache.sqlite;
 
 import android.provider.BaseColumns;
 

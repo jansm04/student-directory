@@ -1,6 +1,6 @@
 package com.jan.studentdirectory.https;
 
-import com.jan.studentdirectory.Student;
+import com.jan.studentdirectory.model.Student;
 
 import java.util.List;
 

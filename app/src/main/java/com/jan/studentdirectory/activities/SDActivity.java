@@ -13,7 +13,7 @@ import androidx.activity.OnBackPressedDispatcher;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
-import com.jan.studentdirectory.Properties;
+import com.jan.studentdirectory.properties.Properties;
 import com.jan.studentdirectory.exceptions.PermissionDeniedException;
 import com.squareup.picasso.OkHttp3Downloader;
 import com.squareup.picasso.Picasso;

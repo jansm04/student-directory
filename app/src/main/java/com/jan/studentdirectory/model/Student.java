@@ -1,4 +1,4 @@
-package com.jan.studentdirectory;
+package com.jan.studentdirectory.model;
 
 import com.google.gson.annotations.SerializedName;
 

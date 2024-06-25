@@ -1,4 +1,4 @@
-package com.jan.studentdirectory;
+package com.jan.studentdirectory.util;
 
 import org.tinylog.Logger;
 

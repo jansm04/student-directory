@@ -1,6 +1,9 @@
 package com.jan.studentdirectory.cache;
 
-import com.jan.studentdirectory.Student;
+import com.jan.studentdirectory.cache.sqlite.SQLiteManager;
+import com.jan.studentdirectory.cache.tasks.CacheTask;
+import com.jan.studentdirectory.cache.tasks.ClearTask;
+import com.jan.studentdirectory.model.Student;
 import com.jan.studentdirectory.exceptions.InvalidTimeException;
 
 import java.util.List;

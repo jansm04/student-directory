@@ -10,7 +10,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.jan.studentdirectory.Properties;
+import com.jan.studentdirectory.properties.Properties;
 import com.jan.studentdirectory.R;
 
 public class WebActivity extends SDActivity {

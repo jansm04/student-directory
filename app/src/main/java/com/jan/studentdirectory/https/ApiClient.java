@@ -2,7 +2,7 @@ package com.jan.studentdirectory.https;
 
 import android.text.TextUtils;
 
-import com.jan.studentdirectory.Properties;
+import com.jan.studentdirectory.properties.Properties;
 import com.jan.studentdirectory.exceptions.InvalidCredentialsException;
 
 import okhttp3.Credentials;
