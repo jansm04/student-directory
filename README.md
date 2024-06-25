@@ -12,7 +12,7 @@ The app fetches student data from a secure external URL. The request is sent eac
 
 The app features a button to start and stop a service that 1) stores student data into an SQLite database every 5 seconds, and 2) tries to post the database records to an API endpoint every 20 seconds. The base URL is the same one used to fetch the student data, so each POST request also requires authorization. If the data is successfully posted, then service deletes the posted records from the SQLite database. If the request is unsuccessful, the data remains stored. As running the service while offline can pile up the database, the POST request is limited to 1000 records at a time. This serves to prevent the system from querying, posting and deleting a large number of records at a single time, effectively keeping the app from crashing.
 
-### Depenencies
+### Dependencies
 - [OkHttp](https://square.github.io/okhttp/)
 - [Retrofit](https://square.github.io/retrofit/)
 - [Picasso](https://square.github.io/picasso/)
