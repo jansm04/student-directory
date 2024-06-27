@@ -16,9 +16,9 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.jan.studentdirectory.exceptions.AppException;
 import com.jan.studentdirectory.util.Logman;
 import com.jan.studentdirectory.util.Timeman;
-import com.jan.studentdirectory.exceptions.InvalidCredentialsException;
 import com.jan.studentdirectory.exceptions.InvalidTimeException;
 import com.jan.studentdirectory.https.ApiClient;
 import com.jan.studentdirectory.https.ApiService;
@@ -69,7 +69,7 @@ public class MainActivity extends SDActivity {
                     Toast.makeText(MainActivity.this, "Request failed", Toast.LENGTH_SHORT).show();
                 }
             });
-        } catch (InvalidCredentialsException e) {
+        } catch (AppException e) {
             e.logErrorMessage();
         }
     }

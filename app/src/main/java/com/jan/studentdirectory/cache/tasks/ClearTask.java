@@ -7,11 +7,11 @@ import androidx.annotation.NonNull;
 
 import com.jan.studentdirectory.cache.sqlite.SQLiteManager;
 import com.jan.studentdirectory.cache.sqlite.UserContract;
+import com.jan.studentdirectory.exceptions.AppException;
 import com.jan.studentdirectory.util.Logman;
 import com.jan.studentdirectory.properties.Properties;
 import com.jan.studentdirectory.model.Student;
 import com.jan.studentdirectory.util.Timeman;
-import com.jan.studentdirectory.exceptions.InvalidCredentialsException;
 import com.jan.studentdirectory.https.ApiClient;
 import com.jan.studentdirectory.https.ApiService;
 
@@ -82,7 +82,7 @@ public class ClearTask extends TimerTask {
                     logman.logErrorMessage("An error occurred trying to post the data. As a result, the cache was not yet cleared.");
                 }
             });
-        } catch (InvalidCredentialsException e) {
+        } catch (AppException e) {
             e.logErrorMessage();
         }
     }
