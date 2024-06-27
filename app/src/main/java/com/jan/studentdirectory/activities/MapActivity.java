@@ -49,7 +49,7 @@ public class MapActivity extends SDActivity implements OnMapReadyCallback {
     private final int REQUEST_FINE_LOCATION = 44;
 
     private static final String MAPVIEW_BUNDLE_KEY = "MapViewBundleKey";
-    Logman logman = Logman.getLogman();
+    Logman logman = Logman.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

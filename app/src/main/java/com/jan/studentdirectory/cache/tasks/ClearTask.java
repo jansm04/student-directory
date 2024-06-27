@@ -30,7 +30,7 @@ public class ClearTask extends TimerTask {
 
     public ClearTask(SQLiteManager sqlManager) {
         this.sqlManager = sqlManager;
-        this.logman = Logman.getLogman();
+        this.logman = Logman.getInstance();
     }
     @Override
     public void run() {

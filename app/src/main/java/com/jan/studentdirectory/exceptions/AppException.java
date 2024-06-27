@@ -9,6 +9,6 @@ public class AppException extends Exception {
     }
 
     public void logErrorMessage() {
-        Logman.getLogman().logErrorMessage(getMessage());
+        Logman.getInstance().logErrorMessage(getMessage());
     }
 }

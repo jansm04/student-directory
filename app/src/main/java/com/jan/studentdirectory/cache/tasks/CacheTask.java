@@ -20,7 +20,7 @@ public class CacheTask extends TimerTask {
     public CacheTask(SQLiteManager sqlManager, List<Student> students) {
         this.sqlManager = sqlManager;
         this.students = students;
-        this.logman = Logman.getLogman();
+        this.logman = Logman.getInstance();
     }
     @Override
     public void run() {

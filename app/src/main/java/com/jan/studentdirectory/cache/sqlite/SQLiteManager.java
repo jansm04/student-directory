@@ -5,7 +5,6 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import com.jan.studentdirectory.cache.sqlite.SQLiteHelper;
 import com.jan.studentdirectory.util.Logman;
 
 public class SQLiteManager extends SQLiteOpenHelper {
@@ -16,7 +15,7 @@ public class SQLiteManager extends SQLiteOpenHelper {
 
     public SQLiteManager(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
-        this.logman = Logman.getLogman();
+        this.logman = Logman.getInstance();
     }
 
     @Override

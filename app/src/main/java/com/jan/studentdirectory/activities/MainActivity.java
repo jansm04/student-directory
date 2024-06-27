@@ -29,8 +29,6 @@ import com.jan.studentdirectory.R;
 import com.jan.studentdirectory.cache.sqlite.SQLiteManager;
 import com.jan.studentdirectory.model.Student;
 
-import org.tinylog.Logger;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -42,7 +40,7 @@ import retrofit2.Response;
 public class MainActivity extends SDActivity {
 
     List<Student> students = new ArrayList<>();
-    Logman logman = Logman.getLogman();
+    Logman logman = Logman.getInstance();
     CacheManager cacheManager;
     boolean isTracking = false;
 
@@ -100,10 +98,10 @@ public class MainActivity extends SDActivity {
         if (directoryForLogs != null) {
             System.setProperty("tinylog.directory", directoryForLogs.getAbsolutePath());
 
-            Logger.info("Process started at {}", Timeman.getCurrentTimestamp());
-            Logger.info("Logs can be found in \"{}\"", directoryForLogs);
+            logman.logInfoMessage("Process started at {}", Timeman.getCurrentTimestamp());
+            logman.logInfoMessage("Logs can be found in \"{}\"", directoryForLogs);
         } else {
-            Logger.error("Null directory for logs.");
+            logman.logErrorMessage("Null directory for logs.");
         }
 
     }

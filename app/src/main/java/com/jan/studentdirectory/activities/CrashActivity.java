@@ -22,7 +22,7 @@ public class CrashActivity extends AppCompatActivity {
     }
 
     public void onCloseButtonClick(View view) {
-        Logman.getLogman().logInfoMessage("Closing app...");
+        Logman.getInstance().logInfoMessage("Closing app...");
         System.exit(0);
     }
 }

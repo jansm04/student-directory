@@ -6,7 +6,7 @@ public class Logman {
 
     private static Logman logman;
 
-    public static Logman getLogman() {
+    public static Logman getInstance() {
         if (logman == null) {
             logman = new Logman();
         }
@@ -17,6 +17,10 @@ public class Logman {
 
     public void logInfoMessage(String infoMessage) {
         Logger.info(infoMessage);
+    }
+
+    public void logInfoMessage(String infoMessage, Object... arguments) {
+        Logger.info(infoMessage, arguments);
     }
 
     public void logErrorMessage(String errorMessage) {

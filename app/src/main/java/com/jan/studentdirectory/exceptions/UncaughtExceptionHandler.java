@@ -23,7 +23,7 @@ public class UncaughtExceptionHandler implements Thread.UncaughtExceptionHandler
         intent.putExtra("error", errorMessage);
 
         context.startActivity(intent);
-        Logman.getLogman().logErrorMessage(errorMessage);
+        Logman.getInstance().logErrorMessage(errorMessage);
 
         // Terminate the process
         android.os.Process.killProcess(android.os.Process.myPid());
