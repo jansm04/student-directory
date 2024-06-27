@@ -17,6 +17,7 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.jan.studentdirectory.exceptions.AppException;
+import com.jan.studentdirectory.exceptions.UncaughtExceptionHandler;
 import com.jan.studentdirectory.util.Logman;
 import com.jan.studentdirectory.util.Timeman;
 import com.jan.studentdirectory.exceptions.InvalidTimeException;
@@ -83,7 +84,18 @@ public class MainActivity extends SDActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
+        bottomNavigationView.getMenu().getItem(0).setChecked(true);
+        moveTaskToBackgroundOnBack();
+        Thread thread = new Thread(() -> {
+            initFileLogger();
+            populateStudents();
+        });
+        thread.setUncaughtExceptionHandler(new UncaughtExceptionHandler(this));
+        thread.start();
+    }
 
+    private void initFileLogger() {
         File directoryForLogs = getExternalFilesDir(null);
         if (directoryForLogs != null) {
             System.setProperty("tinylog.directory", directoryForLogs.getAbsolutePath());
@@ -94,11 +106,6 @@ public class MainActivity extends SDActivity {
             Logger.error("Null directory for logs.");
         }
 
-        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
-        bottomNavigationView.getMenu().getItem(0).setChecked(true);
-        moveTaskToBackgroundOnBack();
-
-        populateStudents();
     }
 
     private void createTable() {

@@ -15,4 +15,7 @@
     <string name="web">Web</string>
     <string name="start_tracking">start tracking</string>
     <string name="stop_tracking">stop tracking</string>
+    <string name="oops">Oops! Something went wrong.</string>
+    <string name="restart_app">Restart App</string>
+    <string name="close_app">Close App</string>
 </resources>
