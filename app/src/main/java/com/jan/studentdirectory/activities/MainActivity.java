@@ -1,10 +1,14 @@
 package com.jan.studentdirectory.activities;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -109,28 +113,59 @@ public class MainActivity extends SDActivity {
     private void createTable() {
         TableLayout table = findViewById(R.id.table);
         TableRow.LayoutParams rowParams = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT);
-        TableRow.LayoutParams elementParams = new TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, 1);
 
-        for (int i = 0; i < students.size(); i++) {
+        TableRow.LayoutParams iconParams = new TableRow.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1);
+        TableRow.LayoutParams elementParams = new TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, 6);
+
+        int size = students.size();
+        for (int i = 0; i < size; i++) {
             Student student = students.get(i);
             TableRow row = new TableRow(this);
-            row.setPadding(8, 8, 8, 8);
+            int paddingHorizontal = dpToPixels(20);
+            int paddingVertical = dpToPixels(16);
+            row.setPadding(paddingHorizontal, paddingVertical, paddingHorizontal, paddingVertical);
             row.setId(i);
+            if (i % 2 == 1) {
+                row.setBackgroundColor(Color.argb(200, 244, 244, 244));
+            }
 
-            createTextView(student.getName(), row, elementParams);
-            createTextView(String.valueOf(student.getStudentId()), row, elementParams);
+            ImageView userIcon = new ImageView(this);
+            userIcon.setImageResource(R.drawable.user_icon);
+            userIcon.setPadding(0, 0, dpToPixels(8), 0);
+            row.addView(userIcon, iconParams);
 
-            // add details button
-            Button details = getButton(student);
-            row.addView(details, elementParams);
+            createTextView(student.getName(), row, elementParams, View.TEXT_ALIGNMENT_TEXT_START);
+            createTextView(String.valueOf(student.getStudentId()), row, elementParams, View.TEXT_ALIGNMENT_TEXT_END);
+
+            row.setOnClickListener(v -> {
+                Intent intent = new Intent(MainActivity.this, DetailsActivity.class);
+                packStudent(intent, student);
+                packStudentsAndStart(intent);
+            });
             table.addView(row, rowParams);
         }
     }
 
-    private void createTextView(String text, TableRow row, TableRow.LayoutParams elementParams) {
+    private int dpToPixels(int dp) {
+        float density = this.getResources().getDisplayMetrics().density;
+        return (int) (dp * density + 0.5f);
+    }
+
+    private static void packStudent(Intent intent, Student student) {
+        intent.putExtra("name", student.getName());
+        intent.putExtra("id", student.getStudentId());
+        intent.putExtra("address", student.getAddress());
+        intent.putExtra("latitude", student.getLatitude());
+        intent.putExtra("longitude", student.getLongitude());
+        intent.putExtra("phone", student.getPhone());
+        intent.putExtra("image", student.getImage());
+    }
+
+    private void createTextView(String text, TableRow row, TableRow.LayoutParams elementParams, int alignment) {
         // add name text view
         TextView name = new TextView(this);
         name.setText(text);
+        name.setTextAlignment(alignment);
         row.addView(name, elementParams);
     }
 
@@ -147,25 +182,6 @@ public class MainActivity extends SDActivity {
     private void stopCacheIntervals() {
         cacheManager.stopCachingInterval();
         cacheManager.stopClearingInterval();
-    }
-
-    @NonNull
-    private Button getButton(Student student) {
-        Button details = new Button(this);
-        details.setText(R.string.details);
-        details.setTextSize(12);
-        details.setOnClickListener(v -> {
-            Intent intent = new Intent(MainActivity.this, DetailsActivity.class);
-            intent.putExtra("name", student.getName());
-            intent.putExtra("id", student.getStudentId());
-            intent.putExtra("address", student.getAddress());
-            intent.putExtra("latitude", student.getLatitude());
-            intent.putExtra("longitude", student.getLongitude());
-            intent.putExtra("phone", student.getPhone());
-            intent.putExtra("image", student.getImage());
-            packStudentsAndStart(intent);
-        });
-        return details;
     }
 
     @Override

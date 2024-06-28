@@ -18,4 +18,5 @@
     <string name="oops">Oops! Something went wrong.</string>
     <string name="restart_app">Restart App</string>
     <string name="close_app">Close App</string>
+    <string name="scroll">scrollview</string>
 </resources>

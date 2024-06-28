@@ -11,7 +11,7 @@ import retrofit2.http.POST;
 
 public interface ApiService {
 
-    @GET("api.php")
+    @GET("api3.php")
     Call<List<Student>> getStudents();
 
     @POST("api2.php")
